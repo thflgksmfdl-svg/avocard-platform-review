@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+// Unset/empty VITE_API_BASE_URL means same-origin (relative paths) — used in
+// review/production builds where the backend serves this SPA itself.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 export class ApiError extends Error {
   constructor(
