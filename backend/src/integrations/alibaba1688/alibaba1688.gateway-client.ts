@@ -20,6 +20,13 @@ export interface GatewayCallResult<T = unknown> {
  * called — callers decide success/failure from the body's own `success`/
  * `error_code` fields, since 1688 returns 200 for many documented error
  * responses.
+ *
+ * All params are sent as query-string, never as a JSON/form body, even for
+ * POST — this matches a working reference implementation elsewhere
+ * (hs-automation project) that always puts params in the query string and
+ * sends POST with an empty body. signApiRequest() internally strips the
+ * "/openapi/" prefix before signing; this function still requests the full
+ * "/openapi/param2/..." path.
  */
 export async function callAlibaba1688Api<T = unknown>(
   config: Alibaba1688GatewayConfig,
