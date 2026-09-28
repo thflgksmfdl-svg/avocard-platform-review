@@ -31,6 +31,10 @@ const envSchema = z.object({
   ALIBABA_1688_BASE_URL: z.string().default(''),
   ALIBABA_1688_APP_KEY: z.string().default(''),
   ALIBABA_1688_APP_SECRET: z.string().default(''),
+  ALIBABA_1688_MAIN_ACCESS_TOKEN: z.string().default(''),
+  ALIBABA_1688_MAIN_REFRESH_TOKEN: z.string().default(''),
+  ALIBABA_1688_SUB_ACCOUNT_MEMBER_ID: z.string().default(''),
+  ALIBABA_1688_SUB_ACCOUNT_ACCESS_TOKEN: z.string().default(''),
 
   JUNGPAN_BASE_URL: z.string().default(''),
   JUNGPAN_SITE_CD: z.string().default(''),
@@ -103,6 +107,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       baseUrl: data.ALIBABA_1688_BASE_URL,
       appKey: data.ALIBABA_1688_APP_KEY,
       appSecret: data.ALIBABA_1688_APP_SECRET,
+      mainAccessToken: data.ALIBABA_1688_MAIN_ACCESS_TOKEN,
+      mainRefreshToken: data.ALIBABA_1688_MAIN_REFRESH_TOKEN,
+      subAccountMemberId: data.ALIBABA_1688_SUB_ACCOUNT_MEMBER_ID,
+      subAccountAccessToken: data.ALIBABA_1688_SUB_ACCOUNT_ACCESS_TOKEN,
     },
     jungpan: {
       baseUrl: data.JUNGPAN_BASE_URL,
