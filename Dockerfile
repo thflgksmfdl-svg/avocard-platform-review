@@ -48,4 +48,13 @@ EXPOSE 4000
 # secrets (DATABASE_URL, ADMIN_SESSION_SECRET, SHOPIFY_AUTH_MODE, ...) are
 # set as environment variables in the hosting platform, never baked in here.
 ENV ADMIN_STATIC_DIR=/app/admin-dist
+
+# Entrypoint: run migrations and seed before starting the server.
+COPY --from=build /app/backend/prisma/migrations backend/prisma/migrations
+RUN mkdir -p /app/backend/prisma
+COPY --from=build /app/backend/prisma/schema.prisma backend/prisma/schema.prisma
+
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["node", "backend/dist/server.js"]

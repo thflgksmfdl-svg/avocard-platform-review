@@ -12,3 +12,4 @@ node_modules
 .claude
 docs
 README.md
+!docker-entrypoint.sh
