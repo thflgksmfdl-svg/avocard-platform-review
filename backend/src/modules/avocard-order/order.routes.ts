@@ -3,9 +3,27 @@ import type { FastifyPluginAsync } from 'fastify';
 import { normalizePageQuery } from '../../shared/pagination.js';
 import { getOrCreateOwnProfile } from '../identity/customer-profile.service.js';
 import { toOrderCustomerDto } from './dto/order.customer-dto.js';
-import { toIntegrationAttemptDto, toOrderInternalDto } from './dto/order.internal-dto.js';
-import { findAnyOrders, findIntegrationAttemptsForOrder, findOwnOrders } from './order.repository.js';
-import { getAnyOrderOrThrow, getOwnOrderOrThrow, submitOrder } from './order.service.js';
+import {
+  toAuditLogDto,
+  toIntegrationAttemptDto,
+  toOrderInternalDto,
+  toOrderNoteDto,
+} from './dto/order.internal-dto.js';
+import {
+  findAnyOrders,
+  findAuditLogForOrder,
+  findIntegrationAttemptsForOrder,
+  findNotesForOrder,
+  findOwnOrders,
+  listAdminUsers,
+} from './order.repository.js';
+import {
+  addOrderNote,
+  assignOrderOperator,
+  getAnyOrderOrThrow,
+  getOwnOrderOrThrow,
+  submitOrder,
+} from './order.service.js';
 
 const submitOrderSchema = z.object({
   customsType: z.enum(['PERSONAL', 'BUSINESS']),
@@ -34,6 +52,36 @@ const submitOrderSchema = z.object({
 const listQuerySchema = z.object({
   page: z.coerce.number().int().positive().optional(),
   pageSize: z.coerce.number().int().positive().optional(),
+});
+
+const adminListQuerySchema = listQuerySchema.extend({
+  search: z.string().trim().min(1).optional(),
+  customerStatus: z
+    .enum([
+      'QUOTE_PENDING',
+      'PAYMENT_PENDING',
+      'PAID',
+      'AWAITING_ARRIVAL',
+      'ARRIVED',
+      'ARRIVAL_ERROR',
+      'AWAITING_SHIPMENT',
+      'SHIPPED',
+    ])
+    .optional(),
+  paymentMethod: z.enum(['CARD', 'BANK_TRANSFER']).optional(),
+  assignedOperatorId: z.string().uuid().optional(),
+  hasApiError: z.coerce.boolean().optional(),
+  hasRefundInProgress: z.coerce.boolean().optional(),
+  submittedFrom: z.coerce.date().optional(),
+  submittedTo: z.coerce.date().optional(),
+});
+
+const assignOperatorSchema = z.object({
+  operatorId: z.string().uuid().nullable(),
+});
+
+const addNoteSchema = z.object({
+  body: z.string().trim().min(1).max(4000),
 });
 
 export const orderRoutes: FastifyPluginAsync = async (fastify) => {
@@ -82,9 +130,18 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
     '/api/v1/admin/orders',
     { preHandler: fastify.verifyAdminSession },
     async (request, reply) => {
-      const query = listQuerySchema.parse(request.query);
+      const query = adminListQuerySchema.parse(request.query);
       const { page, pageSize, skip, take } = normalizePageQuery(query);
-      const [items, total] = await findAnyOrders(fastify.prisma, skip, take);
+      const [items, total] = await findAnyOrders(fastify.prisma, skip, take, {
+        search: query.search,
+        customerStatus: query.customerStatus,
+        paymentMethod: query.paymentMethod,
+        assignedOperatorId: query.assignedOperatorId,
+        hasApiError: query.hasApiError,
+        hasRefundInProgress: query.hasRefundInProgress,
+        submittedFrom: query.submittedFrom,
+        submittedTo: query.submittedTo,
+      });
       reply.send({ items: items.map(toOrderInternalDto), page, pageSize, total });
     },
   );
@@ -95,11 +152,63 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const params = z.object({ id: z.string().uuid() }).parse(request.params);
       const order = await getAnyOrderOrThrow(fastify.prisma, params.id);
-      const attempts = await findIntegrationAttemptsForOrder(fastify.prisma, order.id);
+      const [attempts, notes, auditLog] = await Promise.all([
+        findIntegrationAttemptsForOrder(fastify.prisma, order.id),
+        findNotesForOrder(fastify.prisma, order.id),
+        findAuditLogForOrder(fastify.prisma, order.id),
+      ]);
       reply.send({
         order: toOrderInternalDto(order),
         integrationAttempts: attempts.map(toIntegrationAttemptDto),
+        notes: notes.map(toOrderNoteDto),
+        auditLog: auditLog.map(toAuditLogDto),
       });
+    },
+  );
+
+  fastify.patch(
+    '/api/v1/admin/orders/:id/assigned-operator',
+    { preHandler: fastify.verifyAdminSession },
+    async (request, reply) => {
+      const params = z.object({ id: z.string().uuid() }).parse(request.params);
+      const body = assignOperatorSchema.parse(request.body);
+      const order = await assignOrderOperator(
+        fastify.prisma,
+        params.id,
+        body.operatorId,
+        { type: 'ADMIN', id: request.adminUser!.id },
+        request.correlationId,
+      );
+      const full = await getAnyOrderOrThrow(fastify.prisma, order.id);
+      reply.send(toOrderInternalDto(full));
+    },
+  );
+
+  fastify.post(
+    '/api/v1/admin/orders/:id/notes',
+    { preHandler: fastify.verifyAdminSession },
+    async (request, reply) => {
+      const params = z.object({ id: z.string().uuid() }).parse(request.params);
+      const body = addNoteSchema.parse(request.body);
+      const note = await addOrderNote(
+        fastify.prisma,
+        params.id,
+        body.body,
+        { type: 'ADMIN', id: request.adminUser!.id },
+        request.correlationId,
+      );
+      reply.status(201).send(toOrderNoteDto(note));
+    },
+  );
+
+  fastify.get(
+    '/api/v1/admin/operators',
+    { preHandler: fastify.verifyAdminSession },
+    async (_request, reply) => {
+      const operators = await listAdminUsers(fastify.prisma);
+      reply.send(
+        operators.map((o) => ({ id: o.id, email: o.email, displayName: o.display_name })),
+      );
     },
   );
 };

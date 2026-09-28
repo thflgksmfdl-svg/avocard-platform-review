@@ -1,4 +1,11 @@
-import type { AvocardOrder, CustomerProfile, IntegrationAttempt, OrderItem } from '@prisma/client';
+import type {
+  AuditLog,
+  AvocardOrder,
+  CustomerProfile,
+  IntegrationAttempt,
+  OrderItem,
+  OrderNote,
+} from '@prisma/client';
 
 export interface OrderItemInternalDto {
   id: string;
@@ -87,5 +94,49 @@ export function toIntegrationAttemptDto(attempt: IntegrationAttempt): Integratio
     status: attempt.status,
     retryCount: attempt.retry_count,
     createdAt: attempt.created_at.toISOString(),
+  };
+}
+
+export interface OrderNoteDto {
+  id: string;
+  body: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+export function toOrderNoteDto(note: OrderNote): OrderNoteDto {
+  return {
+    id: note.id,
+    body: note.body,
+    createdBy: note.created_by,
+    createdAt: note.created_at.toISOString(),
+  };
+}
+
+export interface AdminUserOptionDto {
+  id: string;
+  email: string;
+  displayName: string;
+}
+
+export interface AuditLogDto {
+  id: string;
+  action: string;
+  before: unknown;
+  after: unknown;
+  actorType: string;
+  actorId: string | null;
+  createdAt: string;
+}
+
+export function toAuditLogDto(log: AuditLog): AuditLogDto {
+  return {
+    id: log.id,
+    action: log.action,
+    before: log.before_json,
+    after: log.after_json,
+    actorType: log.actor_type,
+    actorId: log.actor_id,
+    createdAt: log.created_at.toISOString(),
   };
 }

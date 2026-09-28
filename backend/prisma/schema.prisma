@@ -146,6 +146,7 @@ model AvocardOrder {
   updated_at           DateTime        @updatedAt
 
   items OrderItem[]
+  notes OrderNote[]
 
   @@index([customer_id])
   @@index([shopify_customer_id])
@@ -188,6 +189,24 @@ model OrderItem {
 
   @@index([order_id])
   @@map("order_item")
+}
+
+// ---------------------------------------------------------------------------
+// Internal order notes (append-only timeline — 05_CUSTOMER_AND_ADMIN_UX.md §9-A
+// "내부메모 timeline"; distinct from AvocardOrder.customer_memo, which the
+// customer wrote at submission time).
+// ---------------------------------------------------------------------------
+
+model OrderNote {
+  id           String       @id @default(uuid())
+  order_id     String
+  order        AvocardOrder @relation(fields: [order_id], references: [id])
+  body         String
+  created_by   String
+  created_at   DateTime     @default(now())
+
+  @@index([order_id])
+  @@map("order_note")
 }
 
 // ---------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 import type { Alibaba1688Port } from '../../integrations/alibaba1688/alibaba1688.port.js';
 import type { Prisma, PrismaClient } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors.js';
+import type { RequestActor } from '../../shared/types.js';
 import { writeAuditLog } from '../audit/audit-log.service.js';
-import { findAnyOrderById, findOwnOrderById } from './order.repository.js';
+import { createOrderNote, findAnyOrderById, findOwnOrderById } from './order.repository.js';
 import { generateOrderNo } from './order-number.js';
 
 const MAX_ORDER_NO_ATTEMPTS = 5;
@@ -231,4 +232,74 @@ export async function getAnyOrderOrThrow(prisma: PrismaClient, id: string) {
     throw new NotFoundError('Order not found');
   }
   return order;
+}
+
+/**
+ * Assigns (or clears, when operatorId is null) the staff member responsible
+ * for an order. 09_CANONICAL_DECISIONS.md gives all ~7 staff the same
+ * permissions, so this is a plain reassignment, not an approval workflow.
+ */
+export async function assignOrderOperator(
+  prisma: PrismaClient,
+  orderId: string,
+  operatorId: string | null,
+  actor: RequestActor,
+  correlationId?: string,
+) {
+  return prisma.$transaction(async (tx) => {
+    const before = await tx.avocardOrder.findUnique({ where: { id: orderId } });
+    if (!before) {
+      throw new NotFoundError('Order not found');
+    }
+
+    const after = await tx.avocardOrder.update({
+      where: { id: orderId },
+      data: { assigned_operator_id: operatorId },
+    });
+
+    await writeAuditLog(tx, {
+      entityType: 'avocard_order',
+      entityId: orderId,
+      action: 'ASSIGN_OPERATOR',
+      before: { assignedOperatorId: before.assigned_operator_id },
+      after: { assignedOperatorId: after.assigned_operator_id },
+      actor,
+      correlationId,
+    });
+
+    return after;
+  });
+}
+
+/**
+ * Appends one row to the order's internal-memo timeline. Notes are
+ * append-only (05_CUSTOMER_AND_ADMIN_UX.md §9-A "내부메모 timeline") — there
+ * is no edit/delete route, matching the audit_log append-only pattern.
+ */
+export async function addOrderNote(
+  prisma: PrismaClient,
+  orderId: string,
+  body: string,
+  actor: RequestActor,
+  correlationId?: string,
+) {
+  return prisma.$transaction(async (tx) => {
+    const order = await tx.avocardOrder.findUnique({ where: { id: orderId } });
+    if (!order) {
+      throw new NotFoundError('Order not found');
+    }
+
+    const note = await createOrderNote(tx, orderId, body, actor.id ?? 'unknown');
+
+    await writeAuditLog(tx, {
+      entityType: 'avocard_order',
+      entityId: orderId,
+      action: 'ADD_NOTE',
+      after: { noteId: note.id, body },
+      actor,
+      correlationId,
+    });
+
+    return note;
+  });
 }
