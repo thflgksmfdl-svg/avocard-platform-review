@@ -8,6 +8,9 @@
 FROM node:20-slim AS build
 WORKDIR /app
 
+# Install system dependencies required by Prisma.
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Install all workspace deps once (dev deps included — needed for tsc/vite build).
 COPY package.json package-lock.json ./
 COPY backend/package.json backend/package.json
@@ -27,6 +30,9 @@ RUN npm run build -w backend
 FROM node:20-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+
+# Install system dependencies required by Prisma at runtime.
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/backend/package.json backend/package.json
