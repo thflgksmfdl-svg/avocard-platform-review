@@ -1,0 +1,270 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Identity
+// ---------------------------------------------------------------------------
+
+enum BusinessDocumentStatus {
+  NOT_SUBMITTED
+  SUBMITTED
+  REVERIFY_REQUIRED
+}
+
+model CustomerProfile {
+  id                             String                 @id @default(uuid())
+  shopify_customer_id            String                 @unique
+  email                          String?
+  phone                          String?
+  business_document_status       BusinessDocumentStatus @default(NOT_SUBMITTED)
+  business_document_submitted_at DateTime?
+  business_document_submitted_by String?
+  created_at                     DateTime               @default(now())
+  updated_at                     DateTime               @updatedAt
+
+  addresses AddressBook[]
+  orders    AvocardOrder[]
+
+  @@map("customer_profile")
+}
+
+enum AddressType {
+  PERSONAL
+  BUSINESS
+}
+
+model AddressBook {
+  id                   String          @id @default(uuid())
+  customer_id          String
+  customer             CustomerProfile @relation(fields: [customer_id], references: [id])
+  address_type         AddressType
+  label                String
+  recipient_name       String?
+  recipient_phone      String?
+  customs_clearance_no String?
+  business_name        String?
+  business_no          String?
+  postal_code          String
+  address              String
+  address_detail       String?
+  is_default           Boolean         @default(false)
+  deleted_at           DateTime?
+  created_at           DateTime        @default(now())
+  updated_at           DateTime        @updatedAt
+
+  @@index([customer_id])
+  @@map("address_book")
+}
+
+// ---------------------------------------------------------------------------
+// Exchange rate (insert-only — no update route is exposed at the API layer)
+// ---------------------------------------------------------------------------
+
+model ExchangeRate {
+  id            String   @id @default(uuid())
+  currency_pair String   @default("CNY_KRW")
+  rate          Decimal  @db.Decimal(12, 6)
+  effective_at  DateTime
+  entered_by    String
+  created_at    DateTime @default(now())
+
+  @@index([currency_pair, effective_at])
+  @@map("exchange_rate")
+}
+
+// ---------------------------------------------------------------------------
+// AVOCARD order (submission skeleton — no payment/1688/jungpan tables yet)
+// ---------------------------------------------------------------------------
+
+enum CustomerStatus {
+  QUOTE_PENDING
+  PAYMENT_PENDING
+  PAID
+  AWAITING_ARRIVAL
+  ARRIVED
+  ARRIVAL_ERROR
+  AWAITING_SHIPMENT
+  SHIPPED
+}
+
+enum InternalStatus {
+  DRAFT
+  ORDER_CREATE_PENDING
+  ORDER_CREATE_PARTIAL_FAILURE
+  ORDER_CREATED
+  CUSTOMER_PAYMENT_PENDING
+  CUSTOMER_PAID
+  STAFF_PURCHASE_IN_PROGRESS
+  SELLER_SHIPMENT_PENDING
+  PARTIALLY_SHIPPED
+  SHIPPED
+  TRADE_COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+}
+
+enum CustomsType {
+  PERSONAL
+  BUSINESS
+}
+
+enum TransportMode {
+  SEA
+  AIR
+  LCL
+}
+
+model AvocardOrder {
+  id                   String          @id @default(uuid())
+  order_no             String          @unique
+  shopify_customer_id  String
+  customer_id          String
+  customer             CustomerProfile @relation(fields: [customer_id], references: [id])
+  customer_status      CustomerStatus  @default(QUOTE_PENDING)
+  internal_status      InternalStatus  @default(DRAFT)
+  payment_method       PaymentMethod?
+  customs_type         CustomsType
+  transport_mode       TransportMode
+  recipient_snapshot   Json
+  customer_memo        String?
+  assigned_operator_id String?
+  submitted_at         DateTime?
+  paid_at              DateTime?
+  hidden_at            DateTime?
+  cancelled_at         DateTime?
+  created_at           DateTime        @default(now())
+  updated_at           DateTime        @updatedAt
+
+  items OrderItem[]
+
+  @@index([customer_id])
+  @@index([shopify_customer_id])
+  @@map("avocard_order")
+}
+
+enum NegotiationStatus {
+  NORMAL
+  REVIEW_REQUIRED
+  RESOLVED
+}
+
+enum RefundStatus {
+  REQUESTED
+  PROCESSING
+  COMPLETED
+}
+
+model OrderItem {
+  id                 String            @id @default(uuid())
+  order_id           String
+  order              AvocardOrder      @relation(fields: [order_id], references: [id])
+  offer_id           String
+  sku_id             String?
+  seller_id          String
+  title_zh           String
+  title_ko           String?
+  image_url          String?
+  product_url        String?
+  video_url          String?
+  option_snapshot    Json?
+  qty                Int
+  cny_unit_price     Decimal           @db.Decimal(12, 4)
+  cny_amount         Decimal           @db.Decimal(12, 4)
+  source_unit_price  Decimal?          @db.Decimal(12, 4)
+  negotiation_status NegotiationStatus @default(NORMAL)
+  refund_status      RefundStatus?
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+
+  @@index([order_id])
+  @@map("order_item")
+}
+
+// ---------------------------------------------------------------------------
+// Admin
+// ---------------------------------------------------------------------------
+
+enum AdminRole {
+  STAFF
+}
+
+model AdminUser {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String
+  display_name  String
+  role          AdminRole @default(STAFF)
+  is_active     Boolean   @default(true)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@map("admin_user")
+}
+
+// ---------------------------------------------------------------------------
+// Audit log (append-only — no update/delete route is exposed)
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  entity_type    String
+  entity_id      String
+  action         String
+  before_json    Json?
+  after_json     Json?
+  actor_type     String
+  actor_id       String?
+  correlation_id String?
+  created_at     DateTime @default(now())
+
+  @@index([entity_type, entity_id])
+  @@index([created_at])
+  @@map("audit_log")
+}
+
+// ---------------------------------------------------------------------------
+// Integration attempt (idempotency / retry tracking for external write calls)
+// ---------------------------------------------------------------------------
+
+enum IntegrationProvider {
+  ALIBABA_1688
+  JUNGPAN
+  SHOPIFY
+  CHANNEL_TALK
+}
+
+enum IntegrationAttemptStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  UNKNOWN_NEEDS_RECONCILE
+}
+
+model IntegrationAttempt {
+  id                 String                   @id @default(uuid())
+  provider           IntegrationProvider
+  operation          String
+  business_key       String
+  request_sanitized  Json?
+  response_sanitized Json?
+  http_status        Int?
+  status             IntegrationAttemptStatus @default(PENDING)
+  retry_count        Int                      @default(0)
+  next_retry_at      DateTime?
+  created_at         DateTime                 @default(now())
+  updated_at         DateTime                 @updatedAt
+
+  @@unique([provider, operation, business_key])
+  @@index([status])
+  @@map("integration_attempt")
+}

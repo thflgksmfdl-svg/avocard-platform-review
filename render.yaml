@@ -1,0 +1,58 @@
+# Render Blueprint for a TEMPORARY review deployment of AVOCARD platform.
+# Not the production deployment shape — see Dockerfile and README.md.
+#
+# This defines:
+#   - a free PostgreSQL instance (review/seed data only)
+#   - a web service built from the repo-root Dockerfile, running the backend
+#     in REVIEW_MODE (serves the admin SPA + blocks /me/* and DELETE routes)
+#
+# Secrets (ADMIN_SESSION_SECRET, SHOPIFY_AUTH_MODE, etc.) are NOT set here —
+# fill them in Render's dashboard as "sync: false" prompts, never commit
+# real values into this file.
+
+databases:
+  - name: avocard-review-db
+    plan: free
+    databaseName: avocard_review
+    user: avocard_review
+
+services:
+  - type: web
+    name: avocard-review-admin
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: development # REVIEW_MODE forbids NODE_ENV=production; see config/env.ts
+      - key: PORT
+        value: 4000
+      - key: LOG_LEVEL
+        value: info
+      - key: REVIEW_MODE
+        value: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: avocard-review-db
+          property: connectionString
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_APP_ORIGIN
+        value: http://localhost:5173 # unused in review mode (same-origin), kept for schema validity
+      - key: SHOPIFY_AUTH_MODE
+        value: dev-stub
+      - key: JUNGPAN_BASE_URL
+        value: ""
+      - key: JUNGPAN_SITE_CD
+        value: ""
+      - key: JUNGPAN_API_KEY
+        value: ""
+      - key: ALIBABA_1688_BASE_URL
+        value: ""
+      - key: ALIBABA_1688_APP_KEY
+        value: ""
+      - key: ALIBABA_1688_APP_SECRET
+        value: ""
+      - key: CHANNEL_TALK_API_KEY
+        value: ""

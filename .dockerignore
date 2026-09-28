@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+.env.local
+.env.*.local
+.env.review
+**/.env.local
+**/.env.*.local
+**/dist
+**/coverage
+*.log
+.git
+.claude
+docs
+README.md

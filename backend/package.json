@@ -1,0 +1,40 @@
+{
+  "name": "@avocard/backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma:generate": "dotenv -e .env.local -- prisma generate",
+    "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "review:create-account": "tsx prisma/create-review-account.ts",
+    "review:delete-account": "tsx prisma/delete-review-account.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/static": "^10.1.4",
+    "@prisma/client": "^5.19.1",
+    "argon2": "^0.40.3",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.12.5",
+    "fastify-plugin": "^5.1.0",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.15",
+    "dotenv-cli": "^7.4.2",
+    "prisma": "^5.19.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^5.0.1"
+  }
+}

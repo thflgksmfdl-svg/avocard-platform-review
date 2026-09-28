@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.env.local
+.env.*.local
+.env.review
+*.log
+coverage/
+.DS_Store
+backend/prisma/generated/
+*.tsbuildinfo
+.claude/
+
+# Business/requirements docs — kept local only, not published to the public
+# review-deployment repository.
+docs/
+10_AGENT_START_PROMPT.md
