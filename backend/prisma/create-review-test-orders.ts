@@ -48,9 +48,11 @@ async function createTestOrder(
     customerStatus: 'QUOTE_PENDING' | 'PAYMENT_PENDING';
     internalStatus: 'ORDER_CREATED' | 'ORDER_CREATE_PARTIAL_FAILURE';
     customerMemo: string;
+    paymentMethod?: 'CARD' | 'BANK_TRANSFER';
   },
 ) {
   const orderNo = generateOrderNo();
+  const sellerId = `test-seller-${orderNo}`;
   const order = await prisma.avocardOrder.create({
     data: {
       order_no: orderNo,
@@ -58,6 +60,7 @@ async function createTestOrder(
       customer_id: customerId,
       customer_status: opts.customerStatus,
       internal_status: opts.internalStatus,
+      payment_method: opts.paymentMethod,
       customs_type: 'PERSONAL',
       transport_mode: 'SEA',
       recipient_snapshot: {
@@ -68,42 +71,68 @@ async function createTestOrder(
       },
       customer_memo: opts.customerMemo,
       submitted_at: new Date(),
-      items: {
-        create: [
-          {
-            offer_id: `test-offer-${orderNo}`,
-            seller_id: `test-seller-${orderNo}`,
-            title_zh: '测试商品（审核用）',
-            title_ko: '테스트 상품 (검토용)',
-            qty: 2,
-            cny_unit_price: '18.50',
-            cny_amount: '37.00',
-          },
-        ],
-      },
     },
   });
+
+  // Stage-2 pricing verification needs a SellerOrder group (per-seller China
+  // shipping + internal 1688 order no.), not just a bare OrderItem.
+  const sellerOrder = await prisma.sellerOrder.create({
+    data: {
+      order_id: order.id,
+      seller_id: sellerId,
+      china_domestic_shipping_cny: '5.00',
+    },
+  });
+
+  await prisma.orderItem.create({
+    data: {
+      order_id: order.id,
+      seller_order_id: sellerOrder.id,
+      offer_id: `test-offer-${orderNo}`,
+      seller_id: sellerId,
+      title_zh: '测试商品（审核用）',
+      title_ko: '테스트 상품 (검토용)',
+      qty: 2,
+      cny_unit_price: '18.50',
+      cny_amount: '37.00',
+    },
+  });
+
   console.log(`Created test order: ${orderNo} (${opts.label})`);
   return order;
+}
+
+async function resetExistingTestOrders() {
+  const existing = await prisma.avocardOrder.findMany({
+    where: { shopify_customer_id: TEST_SHOPIFY_CUSTOMER_ID },
+    select: { id: true },
+  });
+  if (existing.length === 0) return;
+
+  const orderIds = existing.map((o) => o.id);
+  console.log(`Resetting ${orderIds.length} existing test order(s) to rebuild with SellerOrder groups...`);
+
+  await prisma.integrationAttempt.deleteMany({
+    where: { OR: orderIds.map((id) => ({ business_key: { startsWith: `${id}:` } })) },
+  });
+  await prisma.auditLog.deleteMany({ where: { entity_type: 'avocard_order', entity_id: { in: orderIds } } });
+  await prisma.orderNote.deleteMany({ where: { order_id: { in: orderIds } } });
+  await prisma.orderItem.deleteMany({ where: { order_id: { in: orderIds } } });
+  await prisma.sellerOrder.deleteMany({ where: { order_id: { in: orderIds } } });
+  await prisma.avocardOrder.deleteMany({ where: { id: { in: orderIds } } });
 }
 
 async function main() {
   const customer = await ensureTestCustomer();
 
-  const existingCount = await prisma.avocardOrder.count({
-    where: { shopify_customer_id: TEST_SHOPIFY_CUSTOMER_ID },
-  });
-
-  if (existingCount > 0) {
-    console.log(`Test customer already has ${existingCount} order(s); skipping creation.`);
-    return;
-  }
+  await resetExistingTestOrders();
 
   await createTestOrder(customer.id, {
-    label: '정상 생성 완료 주문',
+    label: '정상 생성 완료 주문 (카드결제 예정, 가격수정 테스트용)',
     customerStatus: 'PAYMENT_PENDING',
     internalStatus: 'ORDER_CREATED',
     customerMemo: '검토용 테스트 주문 1 — 정상 케이스',
+    paymentMethod: 'CARD',
   });
 
   const failedOrder = await createTestOrder(customer.id, {

@@ -145,12 +145,40 @@ model AvocardOrder {
   created_at           DateTime        @default(now())
   updated_at           DateTime        @updatedAt
 
-  items OrderItem[]
-  notes OrderNote[]
+  items        OrderItem[]
+  notes        OrderNote[]
+  sellerOrders SellerOrder[]
 
   @@index([customer_id])
   @@index([shopify_customer_id])
   @@map("avocard_order")
+}
+
+// ---------------------------------------------------------------------------
+// Seller order (one per 1688 seller group within an AvocardOrder —
+// 09_CANONICAL_DECISIONS.md "여러 1688 판매자의 상품을 한 주문에 담을 수 있다" and
+// "고객 결제 후 담당자가 금액을... 판매자와 확인"; 05_CUSTOMER_AND_ADMIN_UX.md §9-B
+// "1688 구매정보" groups 단가/중국내운임/총액 by seller, not by the whole order.
+// This is where staff record the internal 1688 order number and edit the
+// China-domestic-shipping cost per seller group; OrderItem.seller_id is kept
+// as the original submission-time snapshot and is not the source of truth
+// for grouping once a SellerOrder exists.
+// ---------------------------------------------------------------------------
+
+model SellerOrder {
+  id                          String       @id @default(uuid())
+  order_id                    String
+  order                       AvocardOrder @relation(fields: [order_id], references: [id])
+  seller_id                   String
+  internal_1688_order_no      String?
+  china_domestic_shipping_cny Decimal      @default(0) @db.Decimal(12, 4)
+  created_at                  DateTime     @default(now())
+  updated_at                  DateTime     @updatedAt
+
+  items OrderItem[]
+
+  @@index([order_id])
+  @@map("seller_order")
 }
 
 enum NegotiationStatus {
@@ -166,28 +194,32 @@ enum RefundStatus {
 }
 
 model OrderItem {
-  id                 String            @id @default(uuid())
-  order_id           String
-  order              AvocardOrder      @relation(fields: [order_id], references: [id])
-  offer_id           String
-  sku_id             String?
-  seller_id          String
-  title_zh           String
-  title_ko           String?
-  image_url          String?
-  product_url        String?
-  video_url          String?
-  option_snapshot    Json?
-  qty                Int
-  cny_unit_price     Decimal           @db.Decimal(12, 4)
-  cny_amount         Decimal           @db.Decimal(12, 4)
-  source_unit_price  Decimal?          @db.Decimal(12, 4)
-  negotiation_status NegotiationStatus @default(NORMAL)
-  refund_status      RefundStatus?
-  created_at         DateTime          @default(now())
-  updated_at         DateTime          @updatedAt
+  id                             String            @id @default(uuid())
+  order_id                       String
+  order                          AvocardOrder      @relation(fields: [order_id], references: [id])
+  seller_order_id                String?
+  sellerOrder                    SellerOrder?      @relation(fields: [seller_order_id], references: [id])
+  offer_id                       String
+  sku_id                         String?
+  seller_id                      String
+  title_zh                       String
+  title_ko                       String?
+  image_url                      String?
+  product_url                    String?
+  video_url                      String?
+  option_snapshot                Json?
+  qty                            Int
+  cny_unit_price                 Decimal           @db.Decimal(12, 4)
+  cny_amount                     Decimal           @db.Decimal(12, 4)
+  source_unit_price              Decimal?          @db.Decimal(12, 4)
+  customer_charge_cny_unit_price Decimal?          @db.Decimal(12, 4)
+  negotiation_status             NegotiationStatus @default(NORMAL)
+  refund_status                  RefundStatus?
+  created_at                     DateTime          @default(now())
+  updated_at                     DateTime          @updatedAt
 
   @@index([order_id])
+  @@index([seller_order_id])
   @@map("order_item")
 }
 
@@ -198,12 +230,12 @@ model OrderItem {
 // ---------------------------------------------------------------------------
 
 model OrderNote {
-  id           String       @id @default(uuid())
-  order_id     String
-  order        AvocardOrder @relation(fields: [order_id], references: [id])
-  body         String
-  created_by   String
-  created_at   DateTime     @default(now())
+  id         String       @id @default(uuid())
+  order_id   String
+  order      AvocardOrder @relation(fields: [order_id], references: [id])
+  body       String
+  created_by String
+  created_at DateTime     @default(now())
 
   @@index([order_id])
   @@map("order_note")

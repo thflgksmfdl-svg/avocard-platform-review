@@ -174,8 +174,20 @@ export async function findAnyOrders(
 export function findAnyOrderById(prisma: PrismaClient, id: string) {
   return prisma.avocardOrder.findUnique({
     where: { id },
-    include: { items: true, customer: true },
+    include: {
+      items: true,
+      customer: true,
+      sellerOrders: { include: { items: true }, orderBy: { created_at: 'asc' } },
+    },
   });
+}
+
+export function findSellerOrderById(prisma: PrismaClient, id: string) {
+  return prisma.sellerOrder.findUnique({ where: { id } });
+}
+
+export function findOrderItemById(prisma: PrismaClient, id: string) {
+  return prisma.orderItem.findUnique({ where: { id } });
 }
 
 export function findIntegrationAttemptsForOrder(prisma: PrismaClient, orderId: string) {

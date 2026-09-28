@@ -8,6 +8,42 @@ export interface OrderErrorSummaryDto {
   lastOccurredAt: string;
 }
 
+export interface OrderItemInternalDto {
+  id: string;
+  sellerOrderId: string | null;
+  offerId: string;
+  sellerId: string;
+  titleZh: string;
+  titleKo: string | null;
+  qty: number;
+  cnyUnitPrice: string;
+  cnyAmount: string;
+  customerChargeCnyUnitPrice: string | null;
+  negotiationStatus: string;
+  refundStatus: string | null;
+}
+
+export interface SellerOrderDto {
+  id: string;
+  sellerId: string;
+  internal1688OrderNo: string | null;
+  chinaDomesticShippingCny: string;
+  items: OrderItemInternalDto[];
+}
+
+export interface OrderPriceBreakdownDto {
+  exchangeRate: string;
+  itemsCnyTotal: string;
+  chinaShippingCnyTotal: string;
+  goodsAndShippingCnyTotal: string;
+  goodsAndShippingKrw: string;
+  serviceFeeKrw: string;
+  walletUsedKrw: string;
+  cardChargeBaseKrw: string;
+  cardFeeKrw: string;
+  totalKrw: string;
+}
+
 export interface OrderInternalDto {
   id: string;
   orderNo: string;
@@ -24,18 +60,9 @@ export interface OrderInternalDto {
   submittedAt: string | null;
   paidAt: string | null;
   errorSummaries: OrderErrorSummaryDto[];
-  items: Array<{
-    id: string;
-    offerId: string;
-    sellerId: string;
-    titleZh: string;
-    titleKo: string | null;
-    qty: number;
-    cnyUnitPrice: string;
-    cnyAmount: string;
-    negotiationStatus: string;
-    refundStatus: string | null;
-  }>;
+  items: OrderItemInternalDto[];
+  sellerOrders: SellerOrderDto[];
+  priceBreakdown: OrderPriceBreakdownDto | null;
 }
 
 export interface IntegrationAttemptDto {
@@ -127,4 +154,17 @@ export function addOrderNote(orderId: string, body: string) {
 
 export function listOperators() {
   return apiClient.get<AdminOperatorDto[]>('/api/v1/admin/operators');
+}
+
+export function updateSellerOrderShipping(
+  sellerOrderId: string,
+  input: { chinaDomesticShippingCny?: string; internal1688OrderNo?: string | null },
+) {
+  return apiClient.patch<void>(`/api/v1/admin/seller-orders/${sellerOrderId}`, input);
+}
+
+export function updateOrderItemCharge(orderItemId: string, customerChargeCnyUnitPrice: string | null) {
+  return apiClient.patch<void>(`/api/v1/admin/order-items/${orderItemId}/customer-charge`, {
+    customerChargeCnyUnitPrice,
+  });
 }

@@ -5,6 +5,8 @@ import {
   getOrderDetail,
   listOperators,
   listOrders,
+  updateOrderItemCharge,
+  updateSellerOrderShipping,
 } from '../api/orders';
 import type {
   AdminOperatorDto,
@@ -14,6 +16,10 @@ import type {
   OrderListFilters,
   OrderNoteDto,
 } from '../api/orders';
+
+function formatKrw(value: string): string {
+  return `${Number(value).toLocaleString('ko-KR')}원`;
+}
 
 const CUSTOMER_STATUSES = [
   'QUOTE_PENDING',
@@ -326,14 +332,58 @@ function OrderDetailPanel({
         ))}
       </select>
 
-      <h3>상품</h3>
-      <ul>
-        {detail.order.items.map((item) => (
-          <li key={item.id}>
-            {item.titleZh} x{item.qty} — ¥{item.cnyAmount} (판매자: {item.sellerId})
-          </li>
-        ))}
-      </ul>
+      {detail.order.priceBreakdown && (
+        <div
+          style={{
+            background: '#f5f7fa',
+            border: '1px solid #dde3ea',
+            borderRadius: 6,
+            padding: 12,
+            marginBottom: 16,
+          }}
+        >
+          <h3 style={{ marginTop: 0 }}>결제금액 (실시간 계산)</h3>
+          <table style={{ fontSize: 13, width: '100%' }}>
+            <tbody>
+              <tr>
+                <td>1688 상품대금 + 중국 내 운임</td>
+                <td style={{ textAlign: 'right' }}>
+                  ¥{detail.order.priceBreakdown.goodsAndShippingCnyTotal} / {formatKrw(detail.order.priceBreakdown.goodsAndShippingKrw)}
+                </td>
+              </tr>
+              <tr>
+                <td>적용 환율</td>
+                <td style={{ textAlign: 'right' }}>1 CNY = {detail.order.priceBreakdown.exchangeRate}원</td>
+              </tr>
+              <tr>
+                <td>구매대행 수수료 6%</td>
+                <td style={{ textAlign: 'right' }}>{formatKrw(detail.order.priceBreakdown.serviceFeeKrw)}</td>
+              </tr>
+              <tr>
+                <td>예치금 사용</td>
+                <td style={{ textAlign: 'right' }}>-{formatKrw(detail.order.priceBreakdown.walletUsedKrw)}</td>
+              </tr>
+              <tr>
+                <td>카드수수료 4% {detail.order.paymentMethod !== 'CARD' && '(계좌이체는 없음)'}</td>
+                <td style={{ textAlign: 'right' }}>{formatKrw(detail.order.priceBreakdown.cardFeeKrw)}</td>
+              </tr>
+              <tr style={{ fontWeight: 700, borderTop: '1px solid #ccc' }}>
+                <td>최종 결제금액</td>
+                <td style={{ textAlign: 'right' }}>{formatKrw(detail.order.priceBreakdown.totalKrw)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style={{ fontSize: 12, color: '#888', marginBottom: 0 }}>
+            단가·중국내운임 수정 시 최신 환율로 즉시 재계산됩니다. 별도 확정 버튼 없음.
+          </p>
+        </div>
+      )}
+
+      <h3>1688 구매정보 (판매자별)</h3>
+      {detail.order.sellerOrders.length === 0 && <p>판매자 그룹 없음</p>}
+      {detail.order.sellerOrders.map((so) => (
+        <SellerOrderPanel key={so.id} sellerOrder={so} onChanged={onChanged} />
+      ))}
 
       <h3>내부메모</h3>
       <ul style={{ paddingLeft: 16, listStyle: 'none' }}>
@@ -389,5 +439,134 @@ function OrderDetailPanel({
         })}
       </ul>
     </div>
+  );
+}
+
+function SellerOrderPanel({
+  sellerOrder,
+  onChanged,
+}: {
+  sellerOrder: OrderInternalDto['sellerOrders'][number];
+  onChanged: () => void;
+}) {
+  const [shipping, setShipping] = useState(sellerOrder.chinaDomesticShippingCny);
+  const [internalOrderNo, setInternalOrderNo] = useState(sellerOrder.internal1688OrderNo ?? '');
+  const [saving, setSaving] = useState(false);
+
+  async function handleSaveShipping() {
+    setSaving(true);
+    try {
+      await updateSellerOrderShipping(sellerOrder.id, {
+        chinaDomesticShippingCny: shipping,
+        internal1688OrderNo: internalOrderNo.trim() || null,
+      });
+      onChanged();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div style={{ border: '1px solid #e2e2e2', borderRadius: 6, padding: 12, marginBottom: 12 }}>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', marginBottom: 8 }}>
+        <strong>판매자: {sellerOrder.sellerId}</strong>
+        <label style={{ fontSize: 13 }}>
+          내부 1688 주문번호{' '}
+          <input
+            value={internalOrderNo}
+            onChange={(e) => setInternalOrderNo(e.target.value)}
+            placeholder="미입력"
+            style={{ width: 160 }}
+          />
+        </label>
+        <label style={{ fontSize: 13 }}>
+          중국 내 운임 (CNY){' '}
+          <input
+            value={shipping}
+            onChange={(e) => setShipping(e.target.value)}
+            style={{ width: 90 }}
+          />
+        </label>
+        <button onClick={handleSaveShipping} disabled={saving}>
+          저장
+        </button>
+      </div>
+
+      <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: 'left' }}>상품</th>
+            <th style={{ textAlign: 'right' }}>수량</th>
+            <th style={{ textAlign: 'right' }}>원 단가(¥)</th>
+            <th style={{ textAlign: 'right' }}>고객청구 단가(¥)</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {sellerOrder.items.map((item) => (
+            <OrderItemRow key={item.id} item={item} onChanged={onChanged} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function OrderItemRow({
+  item,
+  onChanged,
+}: {
+  item: OrderInternalDto['sellerOrders'][number]['items'][number];
+  onChanged: () => void;
+}) {
+  const [chargePrice, setChargePrice] = useState(item.customerChargeCnyUnitPrice ?? item.cnyUnitPrice);
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave() {
+    setSaving(true);
+    try {
+      await updateOrderItemCharge(item.id, chargePrice);
+      onChanged();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleReset() {
+    setSaving(true);
+    try {
+      await updateOrderItemCharge(item.id, null);
+      setChargePrice(item.cnyUnitPrice);
+      onChanged();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <tr>
+      <td>
+        {item.titleZh} {item.titleKo ? `(${item.titleKo})` : ''}
+      </td>
+      <td style={{ textAlign: 'right' }}>{item.qty}</td>
+      <td style={{ textAlign: 'right' }}>{item.cnyUnitPrice}</td>
+      <td style={{ textAlign: 'right' }}>
+        <input
+          value={chargePrice}
+          onChange={(e) => setChargePrice(e.target.value)}
+          style={{ width: 80, textAlign: 'right' }}
+        />
+      </td>
+      <td>
+        <button onClick={handleSave} disabled={saving}>
+          저장
+        </button>
+        {item.customerChargeCnyUnitPrice !== null && (
+          <button onClick={handleReset} disabled={saving} title="원 단가로 되돌리기">
+            초기화
+          </button>
+        )}
+      </td>
+    </tr>
   );
 }

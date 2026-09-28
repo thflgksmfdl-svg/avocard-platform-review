@@ -47,6 +47,8 @@ export async function submitOrder(
   input: SubmitOrderInput,
   correlationId?: string,
 ) {
+  const sellerGroupsAtSubmit = groupBySeller(input.items);
+
   const orderId = await prisma.$transaction(async (tx) => {
     let orderNo: string | null = null;
     let created;
@@ -66,22 +68,6 @@ export async function submitOrder(
             recipient_snapshot: input.recipientSnapshot as Prisma.InputJsonValue,
             customer_memo: input.customerMemo,
             submitted_at: new Date(),
-            items: {
-              create: input.items.map((item) => ({
-                offer_id: item.offerId,
-                sku_id: item.skuId,
-                seller_id: item.sellerId,
-                title_zh: item.titleZh,
-                title_ko: item.titleKo,
-                image_url: item.imageUrl,
-                product_url: item.productUrl,
-                video_url: item.videoUrl,
-                option_snapshot: item.optionSnapshot as Prisma.InputJsonValue | undefined,
-                qty: item.qty,
-                cny_unit_price: item.cnyUnitPrice,
-                cny_amount: (Number(item.cnyUnitPrice) * item.qty).toString(),
-              })),
-            },
           },
         });
         orderNo = candidate;
@@ -98,6 +84,35 @@ export async function submitOrder(
       throw new Error('Failed to generate a unique order_no after multiple attempts');
     }
 
+    // One SellerOrder per 1688 seller group, matching how AVOCARD actually
+    // groups purchasing (09_CANONICAL_DECISIONS.md "여러 1688 판매자의 상품을
+    // 한 주문에 담을 수 있다"), so per-seller China-domestic-shipping and the
+    // internal 1688 order number can be recorded and edited independently.
+    for (const [sellerId, items] of sellerGroupsAtSubmit) {
+      const sellerOrder = await tx.sellerOrder.create({
+        data: { order_id: created.id, seller_id: sellerId },
+      });
+
+      await tx.orderItem.createMany({
+        data: items.map((item) => ({
+          order_id: created!.id,
+          seller_order_id: sellerOrder.id,
+          offer_id: item.offerId,
+          sku_id: item.skuId,
+          seller_id: item.sellerId,
+          title_zh: item.titleZh,
+          title_ko: item.titleKo,
+          image_url: item.imageUrl,
+          product_url: item.productUrl,
+          video_url: item.videoUrl,
+          option_snapshot: item.optionSnapshot as Prisma.InputJsonValue | undefined,
+          qty: item.qty,
+          cny_unit_price: item.cnyUnitPrice,
+          cny_amount: (Number(item.cnyUnitPrice) * item.qty).toString(),
+        })),
+      });
+    }
+
     await writeAuditLog(tx, {
       entityType: 'avocard_order',
       entityId: created.id,
@@ -110,10 +125,9 @@ export async function submitOrder(
     return created.id;
   });
 
-  const sellerGroups = groupBySeller(input.items);
   let anyFailure = false;
 
-  for (const [sellerId, items] of sellerGroups) {
+  for (const [sellerId, items] of sellerGroupsAtSubmit) {
     const businessKey = `${orderId}:${sellerId}:1`;
 
     await prisma.integrationAttempt.upsert({
@@ -263,6 +277,95 @@ export async function assignOrderOperator(
       action: 'ASSIGN_OPERATOR',
       before: { assignedOperatorId: before.assigned_operator_id },
       after: { assignedOperatorId: after.assigned_operator_id },
+      actor,
+      correlationId,
+    });
+
+    return after;
+  });
+}
+
+/**
+ * Updates the per-seller China-domestic-shipping cost and/or the internal
+ * 1688 order number staff record after confirming with the seller
+ * (09_CANONICAL_DECISIONS.md "담당자는... 중국 내 운임... 수정할 수 있다";
+ * 05_CUSTOMER_AND_ADMIN_UX.md §9-B). No exchange-rate or total is stored
+ * here — order-pricing.ts recomputes the customer-facing total from the
+ * latest rate on every read, per "수정값은 고객 화면에 즉시 반영. 별도
+ * `결제금액 확정` 버튼은 없다."
+ */
+export async function updateSellerOrderShipping(
+  prisma: PrismaClient,
+  sellerOrderId: string,
+  input: { chinaDomesticShippingCny?: string; internal1688OrderNo?: string | null },
+  actor: RequestActor,
+  correlationId?: string,
+) {
+  return prisma.$transaction(async (tx) => {
+    const before = await tx.sellerOrder.findUnique({ where: { id: sellerOrderId } });
+    if (!before) {
+      throw new NotFoundError('Seller order not found');
+    }
+
+    const after = await tx.sellerOrder.update({
+      where: { id: sellerOrderId },
+      data: {
+        china_domestic_shipping_cny: input.chinaDomesticShippingCny,
+        internal_1688_order_no: input.internal1688OrderNo,
+      },
+    });
+
+    await writeAuditLog(tx, {
+      entityType: 'seller_order',
+      entityId: sellerOrderId,
+      action: 'UPDATE_SHIPPING_AND_REF',
+      before: {
+        chinaDomesticShippingCny: before.china_domestic_shipping_cny.toString(),
+        internal1688OrderNo: before.internal_1688_order_no,
+      },
+      after: {
+        chinaDomesticShippingCny: after.china_domestic_shipping_cny.toString(),
+        internal1688OrderNo: after.internal_1688_order_no,
+      },
+      actor,
+      correlationId,
+    });
+
+    return after;
+  });
+}
+
+/**
+ * Updates the customer-charged unit price for one order item. Quantity is
+ * never editable here — 09_CANONICAL_DECISIONS.md "담당자도 수량을 수정하지
+ * 않는다" — and the original cny_unit_price (what the customer submitted
+ * at) is left untouched; customer_charge_cny_unit_price is the staff
+ * override that order-pricing.ts prefers when present.
+ */
+export async function updateOrderItemCharge(
+  prisma: PrismaClient,
+  orderItemId: string,
+  customerChargeCnyUnitPrice: string | null,
+  actor: RequestActor,
+  correlationId?: string,
+) {
+  return prisma.$transaction(async (tx) => {
+    const before = await tx.orderItem.findUnique({ where: { id: orderItemId } });
+    if (!before) {
+      throw new NotFoundError('Order item not found');
+    }
+
+    const after = await tx.orderItem.update({
+      where: { id: orderItemId },
+      data: { customer_charge_cny_unit_price: customerChargeCnyUnitPrice },
+    });
+
+    await writeAuditLog(tx, {
+      entityType: 'order_item',
+      entityId: orderItemId,
+      action: 'UPDATE_CUSTOMER_CHARGE_PRICE',
+      before: { customerChargeCnyUnitPrice: before.customer_charge_cny_unit_price?.toString() ?? null },
+      after: { customerChargeCnyUnitPrice: after.customer_charge_cny_unit_price?.toString() ?? null },
       actor,
       correlationId,
     });

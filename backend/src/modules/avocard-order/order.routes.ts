@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { FastifyPluginAsync } from 'fastify';
 import { normalizePageQuery } from '../../shared/pagination.js';
+import { getLatestExchangeRate } from '../exchange-rate/exchange-rate.repository.js';
 import { getOrCreateOwnProfile } from '../identity/customer-profile.service.js';
 import { toOrderCustomerDto } from './dto/order.customer-dto.js';
 import {
@@ -24,6 +25,8 @@ import {
   getAnyOrderOrThrow,
   getOwnOrderOrThrow,
   submitOrder,
+  updateOrderItemCharge,
+  updateSellerOrderShipping,
 } from './order.service.js';
 
 const submitOrderSchema = z.object({
@@ -162,14 +165,19 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const params = z.object({ id: z.string().uuid() }).parse(request.params);
       const order = await getAnyOrderOrThrow(fastify.prisma, params.id);
-      const [attempts, notes, auditLog, errorSummaries] = await Promise.all([
+      const [attempts, notes, auditLog, errorSummaries, latestRate] = await Promise.all([
         findIntegrationAttemptsForOrder(fastify.prisma, order.id),
         findNotesForOrder(fastify.prisma, order.id),
         findAuditLogForOrder(fastify.prisma, order.id),
         findErrorSummariesForOrders(fastify.prisma, [order.id]),
+        getLatestExchangeRate(fastify.prisma),
       ]);
       reply.send({
-        order: toOrderInternalDto(order, errorSummaries.get(order.id) ?? []),
+        order: toOrderInternalDto(
+          order,
+          errorSummaries.get(order.id) ?? [],
+          latestRate ? Number(latestRate.rate) : null,
+        ),
         integrationAttempts: attempts.map(toIntegrationAttemptDto),
         notes: notes.map(toOrderNoteDto),
         auditLog: auditLog.map(toAuditLogDto),
@@ -191,7 +199,54 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
         request.correlationId,
       );
       const full = await getAnyOrderOrThrow(fastify.prisma, order.id);
-      reply.send(toOrderInternalDto(full));
+      const latestRate = await getLatestExchangeRate(fastify.prisma);
+      reply.send(toOrderInternalDto(full, [], latestRate ? Number(latestRate.rate) : null));
+    },
+  );
+
+  const updateSellerOrderSchema = z.object({
+    chinaDomesticShippingCny: z.string().regex(/^\d+(\.\d+)?$/).optional(),
+    internal1688OrderNo: z.string().trim().min(1).nullable().optional(),
+  });
+
+  fastify.patch(
+    '/api/v1/admin/seller-orders/:id',
+    { preHandler: fastify.verifyAdminSession },
+    async (request, reply) => {
+      const params = z.object({ id: z.string().uuid() }).parse(request.params);
+      const body = updateSellerOrderSchema.parse(request.body);
+      await updateSellerOrderShipping(
+        fastify.prisma,
+        params.id,
+        {
+          chinaDomesticShippingCny: body.chinaDomesticShippingCny,
+          internal1688OrderNo: body.internal1688OrderNo,
+        },
+        { type: 'ADMIN', id: request.adminUser!.id },
+        request.correlationId,
+      );
+      reply.status(204).send();
+    },
+  );
+
+  const updateOrderItemChargeSchema = z.object({
+    customerChargeCnyUnitPrice: z.string().regex(/^\d+(\.\d+)?$/).nullable(),
+  });
+
+  fastify.patch(
+    '/api/v1/admin/order-items/:id/customer-charge',
+    { preHandler: fastify.verifyAdminSession },
+    async (request, reply) => {
+      const params = z.object({ id: z.string().uuid() }).parse(request.params);
+      const body = updateOrderItemChargeSchema.parse(request.body);
+      await updateOrderItemCharge(
+        fastify.prisma,
+        params.id,
+        body.customerChargeCnyUnitPrice,
+        { type: 'ADMIN', id: request.adminUser!.id },
+        request.correlationId,
+      );
+      reply.status(204).send();
     },
   );
 
