@@ -77,6 +77,75 @@ export function findOwnOrderById(prisma: PrismaClient, customerId: string, id: s
   });
 }
 
+function orderIdFromBusinessKey(businessKey: string): string | undefined {
+  return businessKey.split(':')[0];
+}
+
+async function findFailedAttemptOrderIds(prisma: PrismaClient): Promise<string[]> {
+  const failedAttempts = await prisma.integrationAttempt.findMany({
+    where: { status: 'FAILED' },
+    select: { business_key: true },
+  });
+  return [
+    ...new Set(
+      failedAttempts.map((a) => orderIdFromBusinessKey(a.business_key)).filter((id): id is string => Boolean(id)),
+    ),
+  ];
+}
+
+export interface OrderErrorSummary {
+  provider: string;
+  operation: string;
+  count: number;
+  lastOccurredAt: string;
+}
+
+/**
+ * Latest-per-(order, provider, operation) FAILED IntegrationAttempt summary
+ * for a set of orders, used to show an error badge/reason on the admin
+ * order list without a per-row round trip (05_CUSTOMER_AND_ADMIN_UX.md §8
+ * "오류 badge").
+ */
+export async function findErrorSummariesForOrders(
+  prisma: PrismaClient,
+  orderIds: string[],
+): Promise<Map<string, OrderErrorSummary[]>> {
+  if (orderIds.length === 0) {
+    return new Map();
+  }
+
+  const failed = await prisma.integrationAttempt.findMany({
+    where: {
+      status: 'FAILED',
+      OR: orderIds.map((id) => ({ business_key: { startsWith: `${id}:` } })),
+    },
+    orderBy: { updated_at: 'desc' },
+  });
+
+  const byOrder = new Map<string, Map<string, OrderErrorSummary>>();
+  for (const attempt of failed) {
+    const orderId = orderIdFromBusinessKey(attempt.business_key);
+    if (!orderId) continue;
+
+    const key = `${attempt.provider}:${attempt.operation}`;
+    const existing = byOrder.get(orderId) ?? new Map<string, OrderErrorSummary>();
+    const current = existing.get(key);
+    if (current) {
+      current.count += 1;
+    } else {
+      existing.set(key, {
+        provider: attempt.provider,
+        operation: attempt.operation,
+        count: 1,
+        lastOccurredAt: attempt.updated_at.toISOString(),
+      });
+    }
+    byOrder.set(orderId, existing);
+  }
+
+  return new Map([...byOrder.entries()].map(([orderId, map]) => [orderId, [...map.values()]]));
+}
+
 export async function findAnyOrders(
   prisma: PrismaClient,
   skip: number,
@@ -86,17 +155,7 @@ export async function findAnyOrders(
   const where = buildAdminOrderWhere(filters);
 
   if (filters.hasApiError) {
-    const failedAttempts = await prisma.integrationAttempt.findMany({
-      where: { status: 'FAILED' },
-      select: { business_key: true },
-    });
-    const orderIds = [
-      ...new Set(
-        failedAttempts
-          .map((a) => a.business_key.split(':')[0])
-          .filter((id): id is string => Boolean(id)),
-      ),
-    ];
+    const orderIds = await findFailedAttemptOrderIds(prisma);
     where.id = { in: orderIds };
   }
 

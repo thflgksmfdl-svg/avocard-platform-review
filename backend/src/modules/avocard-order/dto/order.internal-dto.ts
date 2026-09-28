@@ -22,6 +22,25 @@ export interface OrderItemInternalDto {
   refundStatus: string | null;
 }
 
+export interface OrderErrorSummaryDto {
+  provider: string;
+  operation: string;
+  reason: string;
+  count: number;
+  lastOccurredAt: string;
+}
+
+const ERROR_REASON_LABELS: Record<string, string> = {
+  'ALIBABA_1688:createCrossOrder': '1688 주문 생성 실패',
+  'JUNGPAN:createOrder': '중판 주문 생성 실패',
+  'JUNGPAN:notifyPayment': '중판 결제통보 실패',
+  'SHOPIFY:notifyCustomer': '고객 알림 발송 실패',
+};
+
+export function describeIntegrationError(provider: string, operation: string): string {
+  return ERROR_REASON_LABELS[`${provider}:${operation}`] ?? `${provider} ${operation} 호출 실패`;
+}
+
 export interface OrderInternalDto {
   id: string;
   orderNo: string;
@@ -38,10 +57,12 @@ export interface OrderInternalDto {
   submittedAt: string | null;
   paidAt: string | null;
   items: OrderItemInternalDto[];
+  errorSummaries: OrderErrorSummaryDto[];
 }
 
 export function toOrderInternalDto(
   order: AvocardOrder & { items: OrderItem[]; customer?: CustomerProfile },
+  errorSummaries: { provider: string; operation: string; count: number; lastOccurredAt: string }[] = [],
 ): OrderInternalDto {
   return {
     id: order.id,
@@ -71,6 +92,13 @@ export function toOrderInternalDto(
       sourceUnitPrice: item.source_unit_price?.toString() ?? null,
       negotiationStatus: item.negotiation_status,
       refundStatus: item.refund_status,
+    })),
+    errorSummaries: errorSummaries.map((s) => ({
+      provider: s.provider,
+      operation: s.operation,
+      reason: describeIntegrationError(s.provider, s.operation),
+      count: s.count,
+      lastOccurredAt: s.lastOccurredAt,
     })),
   };
 }

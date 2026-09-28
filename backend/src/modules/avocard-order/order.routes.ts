@@ -12,6 +12,7 @@ import {
 import {
   findAnyOrders,
   findAuditLogForOrder,
+  findErrorSummariesForOrders,
   findIntegrationAttemptsForOrder,
   findNotesForOrder,
   findOwnOrders,
@@ -142,7 +143,16 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
         submittedFrom: query.submittedFrom,
         submittedTo: query.submittedTo,
       });
-      reply.send({ items: items.map(toOrderInternalDto), page, pageSize, total });
+      const errorSummaries = await findErrorSummariesForOrders(
+        fastify.prisma,
+        items.map((o) => o.id),
+      );
+      reply.send({
+        items: items.map((o) => toOrderInternalDto(o, errorSummaries.get(o.id) ?? [])),
+        page,
+        pageSize,
+        total,
+      });
     },
   );
 
@@ -152,13 +162,14 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const params = z.object({ id: z.string().uuid() }).parse(request.params);
       const order = await getAnyOrderOrThrow(fastify.prisma, params.id);
-      const [attempts, notes, auditLog] = await Promise.all([
+      const [attempts, notes, auditLog, errorSummaries] = await Promise.all([
         findIntegrationAttemptsForOrder(fastify.prisma, order.id),
         findNotesForOrder(fastify.prisma, order.id),
         findAuditLogForOrder(fastify.prisma, order.id),
+        findErrorSummariesForOrders(fastify.prisma, [order.id]),
       ]);
       reply.send({
-        order: toOrderInternalDto(order),
+        order: toOrderInternalDto(order, errorSummaries.get(order.id) ?? []),
         integrationAttempts: attempts.map(toIntegrationAttemptDto),
         notes: notes.map(toOrderNoteDto),
         auditLog: auditLog.map(toAuditLogDto),

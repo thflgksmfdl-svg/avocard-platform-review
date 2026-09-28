@@ -173,6 +173,7 @@ export function OrdersPage() {
                   <th style={{ textAlign: 'left' }}>결제수단</th>
                   <th style={{ textAlign: 'left' }}>담당자</th>
                   <th style={{ textAlign: 'left' }}>제출일</th>
+                  <th style={{ textAlign: 'left' }}>오류</th>
                   <th />
                 </tr>
               </thead>
@@ -187,6 +188,28 @@ export function OrdersPage() {
                       <td>{o.paymentMethod ?? '-'}</td>
                       <td>{operator?.displayName ?? '미배정'}</td>
                       <td>{o.submittedAt ? new Date(o.submittedAt).toLocaleString('ko-KR') : '-'}</td>
+                      <td>
+                        {o.errorSummaries.length === 0 ? (
+                          '-'
+                        ) : (
+                          <span
+                            title={o.errorSummaries.map((s) => `${s.reason} (${s.count}회)`).join(', ')}
+                            style={{
+                              display: 'inline-block',
+                              padding: '2px 8px',
+                              borderRadius: 12,
+                              background: '#fdecea',
+                              color: '#b3261e',
+                              fontSize: 12,
+                              fontWeight: 600,
+                              cursor: 'default',
+                            }}
+                          >
+                            ⚠ {o.errorSummaries[0]!.reason}
+                            {o.errorSummaries.length > 1 ? ` 외 ${o.errorSummaries.length - 1}건` : ''}
+                          </span>
+                        )}
+                      </td>
                       <td>
                         <button onClick={() => openDetail(o.id)}>상세</button>
                       </td>
@@ -204,6 +227,7 @@ export function OrdersPage() {
           detail={detail}
           operators={operators}
           onChanged={() => refreshDetail(detail.order.id)}
+          onClose={() => setDetail(null)}
         />
       )}
     </div>
@@ -214,6 +238,7 @@ function OrderDetailPanel({
   detail,
   operators,
   onChanged,
+  onClose,
 }: {
   detail: {
     order: OrderInternalDto;
@@ -223,6 +248,7 @@ function OrderDetailPanel({
   };
   operators: AdminOperatorDto[];
   onChanged: () => void;
+  onClose: () => void;
 }) {
   const [noteBody, setNoteBody] = useState('');
   const [savingNote, setSavingNote] = useState(false);
@@ -253,11 +279,38 @@ function OrderDetailPanel({
 
   return (
     <div style={{ flex: 1, minWidth: 0, borderLeft: '1px solid #ddd', paddingLeft: 24 }}>
-      <h2>주문 상세: {detail.order.orderNo}</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <h2>주문 상세: {detail.order.orderNo}</h2>
+        <button onClick={onClose} title="목록으로 돌아가기" style={{ fontSize: 16, lineHeight: 1, padding: '4px 10px' }}>
+          ✕
+        </button>
+      </div>
       <p>고객 이메일: {detail.order.customerEmail ?? '-'}</p>
       <p>고객상태: {detail.order.customerStatus}</p>
       <p>내부상태: {detail.order.internalStatus}</p>
       <p>고객 제출메모: {detail.order.customerMemo ?? '-'}</p>
+
+      {detail.order.errorSummaries.length > 0 && (
+        <div
+          style={{
+            background: '#fdecea',
+            border: '1px solid #f5c6c3',
+            borderRadius: 6,
+            padding: 12,
+            marginBottom: 16,
+          }}
+        >
+          <h3 style={{ marginTop: 0, color: '#b3261e' }}>⚠ API 오류</h3>
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {detail.order.errorSummaries.map((s) => (
+              <li key={`${s.provider}-${s.operation}`} style={{ fontSize: 13, marginBottom: 4 }}>
+                <strong>{s.reason}</strong> — {s.count}회, 마지막 발생{' '}
+                {new Date(s.lastOccurredAt).toLocaleString('ko-KR')}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <h3>담당자</h3>
       <select

@@ -1,5 +1,13 @@
 import { apiClient } from './client';
 
+export interface OrderErrorSummaryDto {
+  provider: string;
+  operation: string;
+  reason: string;
+  count: number;
+  lastOccurredAt: string;
+}
+
 export interface OrderInternalDto {
   id: string;
   orderNo: string;
@@ -15,6 +23,7 @@ export interface OrderInternalDto {
   customerMemo: string | null;
   submittedAt: string | null;
   paidAt: string | null;
+  errorSummaries: OrderErrorSummaryDto[];
   items: Array<{
     id: string;
     offerId: string;
