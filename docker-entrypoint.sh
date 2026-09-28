@@ -5,7 +5,7 @@ echo "==> Running Prisma migrations..."
 npx prisma migrate deploy --schema backend/prisma/schema.prisma
 
 echo "==> Running Prisma seed..."
-npx prisma db seed --schema backend/prisma/schema.prisma
+cd backend && npx prisma db seed && cd ..
 
 echo "==> Starting AVOCARD backend..."
 exec "$@"
