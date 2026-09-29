@@ -13,6 +13,7 @@ import type {
   PreviewOrderInput,
   ProductDetail,
   ProductSummary,
+  QueryProductDetailInput,
 } from './alibaba1688.port.js';
 
 const NOT_IMPLEMENTED =
@@ -26,7 +27,7 @@ export class Alibaba1688StubAdapter implements Alibaba1688Port {
   async searchByImage(_input: ImageSearchInput): Promise<ProductSummary[]> {
     throw new NotImplementedError(NOT_IMPLEMENTED);
   }
-  async queryProductDetail(_offerId: string): Promise<ProductDetail> {
+  async queryProductDetail(_input: QueryProductDetailInput): Promise<ProductDetail> {
     throw new NotImplementedError(NOT_IMPLEMENTED);
   }
   async estimateFreight(_input: FreightEstimateInput): Promise<FreightEstimate> {

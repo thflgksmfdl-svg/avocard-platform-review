@@ -14,6 +14,7 @@ import { reviewModeGuardPlugin } from './plugins/review-mode-guard.js';
 import { ShopifyDevStubAdapter } from './integrations/shopify/shopify.adapter.dev-stub.js';
 import type { ShopifyPort } from './integrations/shopify/shopify.port.js';
 import { Alibaba1688StubAdapter } from './integrations/alibaba1688/alibaba1688.adapter.stub.js';
+import { Alibaba1688LiveAdapter } from './integrations/alibaba1688/alibaba1688.adapter.live.js';
 import { JungpanStubAdapter } from './integrations/jungpan/jungpan.adapter.stub.js';
 import { ChannelTalkStubAdapter } from './integrations/channel-talk/channel-talk.adapter.stub.js';
 import { healthRoutes } from './modules/health/health.routes.js';
@@ -57,13 +58,28 @@ function buildShopifyAdapter(config: AppConfig): ShopifyPort {
   return new ShopifyDevStubAdapter();
 }
 
+/**
+ * Uses the live adapter only when the gateway base URL, app credentials, and
+ * a sub-account access_token are all present; otherwise falls back to the
+ * stub. Only queryProductDetail is implemented on the live adapter today —
+ * every other method still throws NotImplementedError even when "live" is
+ * selected (see alibaba1688.adapter.live.ts).
+ */
+function buildAlibaba1688Adapter(config: AppConfig): Alibaba1688Port {
+  const { baseUrl, appKey, appSecret, subAccountAccessToken } = config.alibaba1688;
+  if (baseUrl && appKey && appSecret && subAccountAccessToken) {
+    return new Alibaba1688LiveAdapter({ baseUrl, appKey, appSecret, subAccountAccessToken });
+  }
+  return new Alibaba1688StubAdapter();
+}
+
 export async function buildApp(config: AppConfig): Promise<FastifyInstance> {
   const fastify = Fastify({ logger: buildLoggerOptions(config) });
 
   fastify.decorate('config', config);
   fastify.decorate('adapters', {
     shopify: buildShopifyAdapter(config),
-    alibaba1688: new Alibaba1688StubAdapter(),
+    alibaba1688: buildAlibaba1688Adapter(config),
     jungpan: new JungpanStubAdapter(config.jungpan),
     channelTalk: new ChannelTalkStubAdapter(),
   });
