@@ -18,7 +18,8 @@ export interface Alibaba1688Port {
   estimateFreight(input: FreightEstimateInput): Promise<FreightEstimate>;
   previewOrder(input: PreviewOrderInput): Promise<OrderPreview>;
   createCrossOrder(input: CreateCrossOrderInput): Promise<CreateCrossOrderResult>;
-  getBuyerViewOrder(alibabaOrderId: string): Promise<BuyerViewOrder>;
+  /** idOfStr must be 1688's baseInfo.idOfStr (confirmed 2026-09-29) — NOT baseInfo.id. */
+  getBuyerViewOrder(idOfStr: string): Promise<BuyerViewOrder>;
   getLogisticsInfo(alibabaOrderId: string): Promise<LogisticsInfo[]>;
 }
 
@@ -150,9 +151,60 @@ export interface CreateCrossOrderInput {
 export interface CreateCrossOrderResult {
   alibabaOrderId: string;
 }
-export interface BuyerViewOrder {
-  alibabaOrderId: string;
+export interface BuyerViewOrderItem {
+  /**
+   * 1688's productItems[].productID, coerced to string. Product/sku ids
+   * carry lower stakes than order ids if occasionally imprecise — see
+   * alibaba1688.opaque-id.ts.
+   */
+  productId: string;
+  skuId?: string;
+  name: string;
+  priceCny: string;
+  quantity: number;
   status: string;
+  imageUrls: string[];
+}
+
+/**
+ * Verified live (2026-09-29) against a real alibaba.trade.get.buyerView
+ * response, called with orderId = idOfStr + the main-account token (the
+ * ONLY combination confirmed to succeed — see alibaba1688.adapter.live.ts's
+ * token-selection rule).
+ */
+export interface BuyerViewOrder {
+  /**
+   * 1688's baseInfo.id, coerced to string. This is a PARSED, POSSIBLY-LOSSY
+   * OBSERVED VALUE, NOT a guaranteed-accurate copy of 1688's original digits
+   * — baseInfo.id is a 19-digit integer that exceeds
+   * Number.MAX_SAFE_INTEGER, and standard JSON parsing (JSON.parse /
+   * Response.json(), which this adapter's gateway client uses) can already
+   * corrupt such values before any application code runs. Keep this field
+   * for cross-reference/display only; never use it to query getBuyerView or
+   * any other API — use `idOfStr` for that.
+   */
+  id: string;
+  /**
+   * 1688's baseInfo.idOfStr — the CONFIRMED correct, string-safe query key
+   * for alibaba.trade.get.buyerView (confirmed 2026-09-29; baseInfo.id is
+   * NOT recognized by that API at all). Always a JSON string in the
+   * observed response, so it never crosses the numeric-precision boundary
+   * that `id` above does.
+   */
+  idOfStr: string;
+  status: string;
+  totalAmountCny: string;
+  /** Seconds. Never convert to a day count or hardcode a substitute — store and display as-is. */
+  payTimeoutSeconds: number;
+  /** Integer code; meaning unconfirmed as of 2026-09-29. Store as-is. */
+  payTimeoutType: number;
+  tradeTypeCode?: string;
+  tradeTypeDesc?: string;
+  /** 1688's own timestamp format (e.g. "20260929135647000+0800"), NOT ISO 8601 — not parsed/converted here. */
+  createTime: string;
+  buyerLoginId?: string;
+  sellerLoginId?: string;
+  items: BuyerViewOrderItem[];
 }
 export interface LogisticsInfo {
   trackingNo: string;

@@ -1,8 +1,11 @@
-import { NotImplementedError } from '../../shared/errors.js';
+import { Alibaba1688MissingCredentialError, NotImplementedError } from '../../shared/errors.js';
 import { callAlibaba1688Api, type Alibaba1688GatewayConfig } from './alibaba1688.gateway-client.js';
+import { normalizeOrderId } from './alibaba1688.order-id.js';
+import { normalizeOpaqueId } from './alibaba1688.opaque-id.js';
 import type {
   Alibaba1688Port,
   BuyerViewOrder,
+  BuyerViewOrderItem,
   CreateCrossOrderInput,
   CreateCrossOrderResult,
   FreightEstimate,
@@ -112,6 +115,52 @@ interface RawQueryProductDetailEnvelope {
   error_message?: string;
 }
 
+// --- Raw response shapes from alibaba.trade.get.buyerView, captured from a
+// live call against a real pre-existing order (2026-09-29), orderId =
+// baseInfo.idOfStr, access_token = the MAIN account token (confirmed the
+// only combination that succeeds — see the class-level token-selection rule
+// below). Only the fields this adapter actually reads are typed; the real
+// response has more (nativeLogistics, orderRateInfo, tradeTerms,
+// orderBizInfo, guaranteesTerms, etc.) that AVOCARD does not currently need
+// — and this exact field list was captured from a response that was itself
+// truncated mid-stream during capture, so productItems[] in particular may
+// have additional fields not listed here; treat this as the confirmed
+// minimum, not a guaranteed-complete schema.
+interface RawBuyerViewProductItem {
+  productID: number | string;
+  skuID?: number | string;
+  name: string;
+  price: number | string;
+  quantity: number;
+  status: string;
+  productImgUrl?: string[];
+}
+interface RawBuyerViewBaseInfo {
+  id: number | string;
+  idOfStr: string;
+  status: string;
+  totalAmount: number | string;
+  payTimeout: number;
+  payTimeoutType: number;
+  tradeTypeCode?: string;
+  tradeTypeDesc?: string;
+  createTime: string;
+  buyerLoginId?: string;
+  sellerLoginId?: string;
+}
+interface RawBuyerViewResult {
+  baseInfo: RawBuyerViewBaseInfo;
+  productItems?: RawBuyerViewProductItem[];
+}
+interface RawGetBuyerViewEnvelope {
+  result?: RawBuyerViewResult;
+  // Confirmed live: 1688 returns `success` as a STRING ("false") on error
+  // responses for this API, not a boolean — do not compare with `=== false`.
+  success?: string | boolean;
+  errorCode?: string;
+  errorMessage?: string;
+}
+
 function mapSkuAttribute(raw: RawSkuAttribute): SkuAttribute {
   return {
     attributeId: String(raw.attributeId),
@@ -176,6 +225,54 @@ function mapProductDetail(result: RawProductDetailResult): ProductDetail {
     seller: mapSeller(result),
     shipFromText: result.productShippingInfo?.sendGoodsAddressText ?? result.sendGoodsAddressText,
     status: result.status,
+  };
+}
+
+function mapBuyerViewProductItem(raw: RawBuyerViewProductItem): BuyerViewOrderItem {
+  return {
+    // productId/skuId are product-catalog identifiers, not order
+    // identifiers — normalizeOpaqueId() directly, not normalizeOrderId()
+    // (which is order-id-specific and throws on any detected precision
+    // risk; product/sku ids carry lower stakes here, so we surface the
+    // parsed string even if possiblyLossy rather than hard-failing the
+    // whole order lookup over a line-item's product id).
+    productId: normalizeOpaqueId(raw.productID, 'buyerView.productItems[].productID').value,
+    skuId: raw.skuID === undefined ? undefined : normalizeOpaqueId(raw.skuID, 'buyerView.productItems[].skuID').value,
+    name: raw.name,
+    priceCny: String(raw.price),
+    quantity: raw.quantity,
+    status: raw.status,
+    imageUrls: raw.productImgUrl ?? [],
+  };
+}
+
+function mapBuyerViewOrder(result: RawBuyerViewResult): BuyerViewOrder {
+  const { baseInfo } = result;
+
+  // baseInfo.id: kept as a best-effort, POSSIBLY-LOSSY observed value for
+  // cross-reference/display only — never as a query key. It is a 19-digit
+  // integer that can already be corrupted by the time it reaches this
+  // function (JSON.parse/Response.json() itself can lose precision on such
+  // values before any application code runs) — String(number) here is
+  // "string-ify whatever we observed after parsing," not "recover 1688's
+  // original exact digits." idOfStr below is the field with no such risk
+  // (it arrives as a JSON string, confirmed in the live response) and is
+  // the only field that should ever be used to query this API again.
+  const idNormalized = normalizeOpaqueId(baseInfo.id, 'buyerView.baseInfo.id');
+
+  return {
+    id: idNormalized.value,
+    idOfStr: normalizeOrderId(baseInfo.idOfStr),
+    status: baseInfo.status,
+    totalAmountCny: String(baseInfo.totalAmount),
+    payTimeoutSeconds: baseInfo.payTimeout,
+    payTimeoutType: baseInfo.payTimeoutType,
+    tradeTypeCode: baseInfo.tradeTypeCode,
+    tradeTypeDesc: baseInfo.tradeTypeDesc,
+    createTime: baseInfo.createTime,
+    buyerLoginId: baseInfo.buyerLoginId,
+    sellerLoginId: baseInfo.sellerLoginId,
+    items: (result.productItems ?? []).map(mapBuyerViewProductItem),
   };
 }
 
@@ -273,34 +370,51 @@ export class Alibaba1688LiveAdapter implements Alibaba1688Port {
   async createCrossOrder(_input: CreateCrossOrderInput): Promise<CreateCrossOrderResult> {
     throw new NotImplementedError(NOT_IMPLEMENTED);
   }
-  // TODO: alibaba.trade.get.buyerView confirmed live (2026-09-29) to require
-  // mainAccountAccessToken and the order's `idOfStr` field as the orderId
-  // query param (NOT `baseInfo.id` — that field is not recognized at all).
-  // Not implemented here yet — out of scope for this change; implement as a
-  // separate, explicit task. When implemented, this identifier must be
-  // handled as `string` end-to-end (idOfStr is a 19-digit integer that
-  // exceeds Number.MAX_SAFE_INTEGER — never Number()/parseInt() it).
-  //
-  // DESIGN NOTE for that future implementation (not yet built — this is a
-  // proposal, no getBuyerView call exists here): main-token-requiring
-  // methods must fail with an explicit, distinguishable credential error
-  // when this.config.mainAccountAccessToken is empty, rather than sending a
-  // request with an empty access_token and letting 1688 return whatever
-  // generic auth error it happens to give for that case (untested — 1688's
-  // behavior for a blank access_token has not been observed live). Proposed
-  // shape: a dedicated error type/class (e.g. `Alibaba1688MissingCredentialError`,
-  // alongside the existing `NotImplementedError` in ../../shared/errors.ts)
-  // thrown BEFORE the network call — `if (!this.config.mainAccountAccessToken) throw new
-  // Alibaba1688MissingCredentialError('getBuyerView requires ALIBABA_1688_MAIN_ACCESS_TOKEN')`
-  // — so a missing env var produces a clear, greppable error distinct from
-  // both NotImplementedError (method not built) and a real 1688 API error
-  // (method built, call failed). This keeps the existing pattern where
-  // missing sub-account config falls back to the stub adapter at boot time
-  // (app.ts's buildAlibaba1688Adapter) consistent for the main-token case
-  // too, but at call time instead of boot time, since only some methods on
-  // this adapter need the main token while others (queryProductDetail) don't.
-  async getBuyerViewOrder(_alibabaOrderId: string): Promise<BuyerViewOrder> {
-    throw new NotImplementedError(NOT_IMPLEMENTED);
+  /**
+   * Verified live (2026-09-29) against a real, pre-existing order. Confirmed:
+   *   - Requires mainAccountAccessToken — subAccountAccessToken gets
+   *     PEMISSION_ERROR (1688's own misspelling) even with the correct
+   *     identifier.
+   *   - `idOfStr` must be used as the orderId query param — `baseInfo.id`
+   *     is NOT recognized by this API at all (NOT_EXIST_DATA).
+   * Only queryProductDetail and this method are implemented; every other
+   * port method still throws NotImplementedError.
+   */
+  async getBuyerViewOrder(idOfStr: string): Promise<BuyerViewOrder> {
+    if (!this.config.mainAccountAccessToken) {
+      throw new Alibaba1688MissingCredentialError(
+        'getBuyerViewOrder requires ALIBABA_1688_MAIN_ACCESS_TOKEN to be configured — ' +
+          'subAccountAccessToken is confirmed insufficient for this API (PEMISSION_ERROR).',
+      );
+    }
+
+    // idOfStr must already be a validated string order id — reject anything
+    // that isn't (empty string, etc.) before spending a network call on it.
+    const normalizedIdOfStr = normalizeOrderId(idOfStr);
+
+    // Token: mainAccountAccessToken — confirmed working for getBuyerView (2026-09-29).
+    const result = await callAlibaba1688Api<RawGetBuyerViewEnvelope>(
+      this.config,
+      'com.alibaba.trade',
+      'alibaba.trade.get.buyerView',
+      {
+        access_token: this.config.mainAccountAccessToken,
+        webSite: '1688',
+        orderId: normalizedIdOfStr,
+      },
+    );
+
+    const envelope = result.body;
+    if (envelope.errorCode) {
+      throw new Error(`1688 getBuyerView failed: ${envelope.errorCode} ${envelope.errorMessage ?? ''}`);
+    }
+    if (!envelope.result?.baseInfo) {
+      throw new Error(
+        `1688 getBuyerView returned an unexpected shape: ${JSON.stringify(envelope).slice(0, 500)}`,
+      );
+    }
+
+    return mapBuyerViewOrder(envelope.result);
   }
   // TODO: token unconfirmed for getLogisticsInfos.buyerView / getLogisticsTraceInfo.buyerView.
   async getLogisticsInfo(_alibabaOrderId: string): Promise<LogisticsInfo[]> {

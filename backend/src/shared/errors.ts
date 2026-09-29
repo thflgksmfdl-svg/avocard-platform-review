@@ -49,3 +49,17 @@ export class NotImplementedError extends AppError {
     super(message, 501, 'NOT_IMPLEMENTED');
   }
 }
+
+/**
+ * Thrown by a live adapter method BEFORE any network call, when a required
+ * 1688 credential (e.g. the main-account access token) is not configured.
+ * Distinct from NotImplementedError (method not built at all) and from a
+ * real 1688 API error (method built, the call itself failed) — this is
+ * specifically "method built, but this deployment/environment is missing
+ * the credential it needs."
+ */
+export class Alibaba1688MissingCredentialError extends AppError {
+  constructor(message: string) {
+    super(message, 500, 'ALIBABA_1688_MISSING_CREDENTIAL');
+  }
+}
