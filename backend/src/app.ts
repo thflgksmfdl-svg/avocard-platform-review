@@ -64,11 +64,26 @@ function buildShopifyAdapter(config: AppConfig): ShopifyPort {
  * stub. Only queryProductDetail is implemented on the live adapter today —
  * every other method still throws NotImplementedError even when "live" is
  * selected (see alibaba1688.adapter.live.ts).
+ *
+ * mainAccessToken is passed through whenever present but is NOT required to
+ * select the live adapter — confirmed live (2026-09-29) that queryProductDetail
+ * (the only implemented method) only needs subAccountAccessToken. Once a
+ * main-token-requiring method (e.g. getBuyerView) is implemented, calling it
+ * without ALIBABA_1688_MAIN_ACCESS_TOKEN configured will fail at call time
+ * with a normal 1688 auth/permission error, not a boot-time failure — this
+ * mirrors how missing sub-account config already falls back to the stub
+ * adapter rather than crashing.
  */
 function buildAlibaba1688Adapter(config: AppConfig): Alibaba1688Port {
-  const { baseUrl, appKey, appSecret, subAccountAccessToken } = config.alibaba1688;
+  const { baseUrl, appKey, appSecret, mainAccessToken, subAccountAccessToken } = config.alibaba1688;
   if (baseUrl && appKey && appSecret && subAccountAccessToken) {
-    return new Alibaba1688LiveAdapter({ baseUrl, appKey, appSecret, subAccountAccessToken });
+    return new Alibaba1688LiveAdapter({
+      baseUrl,
+      appKey,
+      appSecret,
+      mainAccountAccessToken: mainAccessToken,
+      subAccountAccessToken,
+    });
   }
   return new Alibaba1688StubAdapter();
 }
