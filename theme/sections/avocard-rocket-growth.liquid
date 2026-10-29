@@ -1,0 +1,168 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-band--blue section-{{ section.id }}-padding">
+  <div class="avocard-page avocard-split">
+    <div>
+      {%- render 'avocard-section-heading',
+        eyebrow: section.settings.eyebrow,
+        heading: section.settings.heading,
+        text: section.settings.text
+      -%}
+
+      {%- render 'avocard-cta-buttons',
+        primary_label: section.settings.primary_label,
+        primary_link: section.settings.primary_link,
+        secondary_label: section.settings.secondary_label,
+        secondary_link: section.settings.secondary_link
+      -%}
+    </div>
+
+    <div class="avocard-card">
+      <ul class="avocard-check-list" role="list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard rocket growth",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "로켓그로스 입고 대행"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "로켓그로스 입고를 위한 작업까지 한 번에 진행합니다"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>바코드, 부착문서, 동봉문서, 패킹리스트, 박스갈이, 파렛트 작업, 3PL 보관, 밀크런 픽업까지 입고 흐름에 맞춰 대응합니다.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "로켓그로스 입고 문의하기"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "입고 가능 여부 확인하기"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "바코드 부착"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard rocket growth",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "label": "바코드 부착"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "부착문서 / 동봉문서 / 패킹리스트 작업"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "합포장, 박스갈이, 파렛트 작업"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "한국 Avocard 3PL 창고 보관"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "밀크런 픽업 또는 CJ대한통운 직접 발송"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

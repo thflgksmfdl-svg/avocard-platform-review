@@ -1,0 +1,227 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-cert section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    <div class="avocard-cert__head">
+      <span class="avocard-cert__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+
+      <h2 class="avocard-cert__title">
+        {{ section.settings.heading_1 | escape }}
+        <span class="avocard-cert__accent">{{ section.settings.heading_2 | escape }}</span>
+      </h2>
+
+      <p class="avocard-cert__subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+
+    <div class="avocard-cert__grid">
+      {%- for block in section.blocks -%}
+        <article class="avocard-cert__card" {{ block.shopify_attributes }}>
+          <div class="avocard-cert__image-wrap">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+                class="avocard-cert__image"
+              >
+            {%- else -%}
+              {%- if block.settings.title contains '슈퍼 바이어' -%}
+                <img
+                  src="{{ 'avocard-cert-1688-super-buyer.png' | asset_url }}"
+                  alt="1688 슈퍼 바이어 인증서"
+                  width="400"
+                  height="280"
+                  loading="lazy"
+                  class="avocard-cert__image"
+                >
+              {%- elsif block.settings.title contains '벤처확인' -%}
+                <img
+                  src="{{ 'avocard-cert-venture-enterprise.png' | asset_url }}"
+                  alt="벤처확인기업 인증서"
+                  width="400"
+                  height="280"
+                  loading="lazy"
+                  class="avocard-cert__image"
+                >
+              {%- else -%}
+                <div class="avocard-cert__image-fallback">{{ block.settings.title | escape }}<br>인증 명패 이미지 영역</div>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div class="avocard-cert__content">
+            <span class="avocard-cert__badge">
+              {%- render 'avocard-icon', name: block.settings.badge_icon, size: 15 -%}
+              {{ block.settings.badge_label | escape }}
+            </span>
+
+            <h3 class="avocard-cert__card-title">{{ block.settings.title | escape }}</h3>
+            {%- if block.settings.subtitle != blank -%}
+              <p class="avocard-cert__card-subtitle">{{ block.settings.subtitle | escape }}</p>
+            {%- endif -%}
+
+            <p class="avocard-cert__description">{{ block.settings.description | escape }}</p>
+
+            {%- if block.settings.number_label != blank -%}
+              <div class="avocard-cert__number">
+                {%- render 'avocard-icon', name: 'file-text', size: 16 -%}
+                {{ block.settings.number_label | escape }}
+              </div>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard certification",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "공식 인증"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading part 1",
+      "default": "공식 인증받은"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading part 2 (accent)",
+      "default": "믿을 수 있는 파트너"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "1688 공식 협력사이자 정부 인증 벤처기업, 아보카드 주식회사가 직접 운영합니다."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "certificate",
+      "name": "Certificate",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Certificate image"
+        },
+        {
+          "type": "text",
+          "id": "badge_icon",
+          "label": "Badge icon name",
+          "default": "check-circle"
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge label",
+          "default": "1688 공식 인증"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "1688 슈퍼 바이어"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Annual Elite Customer · 超级买家"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "1688이 공식 인정한 슈퍼 바이어입니다. 일반 계정과 차별화된 최상위 등급으로, 공식 채널을 통한 안전한 직거래와 단가 협상을 제공합니다."
+        },
+        {
+          "type": "text",
+          "id": "number_label",
+          "label": "Number label (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard certification",
+      "blocks": [
+        {
+          "type": "certificate",
+          "settings": {
+            "badge_icon": "check-circle",
+            "badge_label": "1688 공식 인증",
+            "title": "1688 슈퍼 바이어",
+            "subtitle": "Annual Elite Customer · 超级买家",
+            "description": "1688이 공식 선정한 슈퍼 바이어입니다.\n일반 계정은 받을 수 없는 최상위 등급으로,\n안전한 거래와 단가 혜택을 보장합니다."
+          }
+        },
+        {
+          "type": "certificate",
+          "settings": {
+            "badge_icon": "shield",
+            "badge_label": "정부 공인",
+            "title": "벤처확인기업",
+            "subtitle": "Venture Enterprise · 중판 주식회사",
+            "description": "벤처기업확인기관이 인증한 혁신 성장유형\n벤처확인기업입니다. 정부가 검증한 기업이\n직접 운영하는 서비스입니다.",
+            "number_label": "벤처확인번호 20260506030073"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

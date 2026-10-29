@@ -1,0 +1,204 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-band--soft section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- render 'avocard-section-heading',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.text
+    -%}
+
+    <div class="avocard-grid avocard-grid--2">
+      <article class="avocard-card">
+        <span class="avocard-number">P</span>
+        <h3>{{ section.settings.personal_title | escape }}</h3>
+        <p>{{ section.settings.personal_text | escape }}</p>
+      </article>
+      <article class="avocard-card">
+        <span class="avocard-number">B</span>
+        <h3>{{ section.settings.business_title | escape }}</h3>
+        <p>{{ section.settings.business_text | escape }}</p>
+      </article>
+    </div>
+
+    <div class="avocard-card" style="margin-top: 18px;">
+      <ul class="avocard-check-list" role="list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    {%- render 'avocard-cta-buttons',
+      primary_label: section.settings.primary_label,
+      primary_link: section.settings.primary_link,
+      secondary_label: section.settings.secondary_label,
+      secondary_link: section.settings.secondary_link,
+      align: 'center'
+    -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard customs guide",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "통관 상담"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "개인통관과 사업자통관 모두 상담 가능합니다"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>상품 종류, 수량, 인증 여부에 따라 적합한 통관 방식이 달라질 수 있습니다. 애매한 경우 견적서를 제출해 주시면 고객센터에서 확인해드립니다.</p>"
+    },
+    {
+      "type": "text",
+      "id": "personal_title",
+      "label": "Personal title",
+      "default": "개인 셀러"
+    },
+    {
+      "type": "textarea",
+      "id": "personal_text",
+      "label": "Personal text",
+      "default": "개인통관 가능 여부와 상품별 제한 사항을 확인해 안내합니다."
+    },
+    {
+      "type": "text",
+      "id": "business_title",
+      "label": "Business title",
+      "default": "사업자 셀러"
+    },
+    {
+      "type": "textarea",
+      "id": "business_text",
+      "label": "Business text",
+      "default": "사업자통관, 수입 증빙, 회계처리 자료 준비까지 함께 상담합니다."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "통관 방식 문의하기"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "상품 가능 여부 확인하기"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "개인통관 가능 여부 확인"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard customs guide",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "label": "개인통관 가능 여부 확인"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "사업자통관 진행 상담"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "인증 필요 여부 확인"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "상품별 통관 제한 여부 확인"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "label": "로켓그로스 입고 가능 여부 확인"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

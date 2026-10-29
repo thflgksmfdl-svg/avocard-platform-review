@@ -1,0 +1,89 @@
+{%- comment -%}
+  Usage: {% render 'avocard-icon', name: 'package', size: 20 %}
+  Line-style icon set (24x24 viewBox, stroke-based), matching the Lucide icon
+  set used in the Avocard reference design.
+{%- endcomment -%}
+{%- liquid
+  assign icon_size = size | default: 20
+-%}
+<svg
+  class="avocard-icon avocard-icon--{{ name }}"
+  width="{{ icon_size }}"
+  height="{{ icon_size }}"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {%- case name -%}
+    {%- when 'package' -%}
+      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+      <path d="m3.3 7 8.7 5 8.7-5" />
+      <path d="M12 22V12" />
+    {%- when 'truck' -%}
+      <path d="M14 18V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h1" />
+      <path d="M14 9h4l3 4v4a1 1 0 0 1-1 1h-1" />
+      <circle cx="7" cy="18" r="2" />
+      <circle cx="17" cy="18" r="2" />
+    {%- when 'check-circle' -%}
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    {%- when 'chevron-down' -%}
+      <path d="m6 9 6 6 6-6" />
+    {%- when 'chevron-up' -%}
+      <path d="m18 15-6-6-6 6" />
+    {%- when 'arrow-right' -%}
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    {%- when 'phone' -%}
+      <path d="M13.8 19.5a2 2 0 0 1-1.9 1.4h-.2a17.9 17.9 0 0 1-9.6-9.6v-.2a2 2 0 0 1 1.4-1.9l2.4-.7a2 2 0 0 1 2.2.8l1 1.6a2 2 0 0 1-.2 2.4l-.6.7a12 12 0 0 0 4.6 4.6l.7-.6a2 2 0 0 1 2.4-.2l1.6 1a2 2 0 0 1 .8 2.2Z" />
+    {%- when 'file-text' -%}
+      <path d="M14.5 2H6a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7.5Z" />
+      <path d="M14 2v6h6" />
+      <path d="M9 13h6" />
+      <path d="M9 17h6" />
+      <path d="M9 9h1" />
+    {%- when 'shield' -%}
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+    {%- when 'bar-chart' -%}
+      <path d="M3 3v18h18" />
+      <rect x="7" y="12" width="3" height="6" />
+      <rect x="13" y="8" width="3" height="10" />
+      <rect x="19" y="5" width="0" height="0" />
+      <rect x="15.5" y="8" width="3" height="10" />
+    {%- when 'globe' -%}
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20" />
+      <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10Z" />
+    {%- when 'warehouse' -%}
+      <path d="M3 21V10l9-6 9 6v11" />
+      <path d="M5 21V12h14v9" />
+      <path d="M9 21v-6h6v6" />
+    {%- when 'credit-card' -%}
+      <rect x="2" y="5" width="20" height="14" rx="2" />
+      <path d="M2 10h20" />
+    {%- when 'menu' -%}
+      <path d="M4 6h16" />
+      <path d="M4 12h16" />
+      <path d="M4 18h16" />
+    {%- when 'x' -%}
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    {%- when 'zap' -%}
+      <path d="M13 2 3 14h8l-1 8 10-12h-8z" />
+    {%- when 'lightbulb' -%}
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1v.2h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z" />
+    {%- when 'history' -%}
+      <path d="M12 3a9 9 0 1 0 9 9" />
+      <path d="M12 7v5l3 2" />
+      <path d="M16 3h5v5" />
+      <path d="M21 3l-5 5" />
+    {%- else -%}
+  {%- endcase -%}
+</svg>

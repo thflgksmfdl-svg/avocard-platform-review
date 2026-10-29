@@ -1,0 +1,46 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "avocard_footer": {
+      "type": "avocard-footer",
+      "blocks": {
+        "footer_nav_1": {
+          "type": "nav_link",
+          "settings": {
+            "label": "소개",
+            "link": "https://avocard.co.kr/pages/%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80"
+          }
+        },
+        "footer_nav_3": {
+          "type": "nav_link",
+          "settings": {
+            "label": "수수료",
+            "link": "https://avocard.co.kr/pages/%EC%95%84%EB%B3%B4%EC%B9%B4%EB%93%9C-%EA%B2%B0%EC%A0%9C%EB%B0%A9%EC%8B%9D"
+          }
+        },
+        "footer_nav_5": {
+          "type": "nav_link",
+          "settings": {
+            "label": "FAQ",
+            "link": "shopify://pages/자주하는-질문"
+          }
+        }
+      },
+      "block_order": [
+        "footer_nav_1",
+        "footer_nav_3",
+        "footer_nav_5"
+      ],
+      "settings": {
+        "logo_text": "avocard",
+        "tagline_line_1": "한국 셀러를 위한 1688 수입대행 플랫폼",
+        "tagline_line_2": "구매대행 · 검수 · 통관 · 3PL · 로켓그로스 입고",
+        "copyright": "© 2026 Avocard. All rights reserved."
+      }
+    }
+  },
+  "order": [
+    "avocard_footer"
+  ]
+}

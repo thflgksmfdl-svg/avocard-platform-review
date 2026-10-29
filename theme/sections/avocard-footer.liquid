@@ -1,0 +1,143 @@
+<footer class="avocard avocard-site-footer">
+  <div class="avocard-site-footer__main">
+    <div class="avocard-site-footer__brand">
+      <a class="avocard-site-footer__logo" href="{{ section.settings.logo_link | default: '/' }}" aria-label="아보카드 홈으로 이동">
+        {%- if section.settings.logo_image != blank -%}
+          <img
+            class="avocard-site-footer__logo-image"
+            src="{{ section.settings.logo_image | image_url: width: 160 }}"
+            alt="{{ section.settings.logo_image.alt | default: 'Avocard' | escape }}"
+            width="{{ section.settings.logo_image.width }}"
+            height="{{ section.settings.logo_image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          <img
+            class="avocard-site-footer__logo-image"
+            src="{{ 'avocard-logo-main.png' | asset_url }}"
+            alt="Avocard"
+            width="80"
+            height="80"
+            loading="lazy"
+          >
+        {%- endif -%}
+        <span>{{ section.settings.logo_text | escape }}</span>
+      </a>
+
+      <p class="avocard-site-footer__copy">
+        <span>{{ section.settings.tagline_line_1 | escape }}</span>
+        <span>{{ section.settings.tagline_line_2 | escape }}</span>
+      </p>
+    </div>
+
+    <nav class="avocard-site-footer__nav" aria-label="푸터 메뉴">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+      {%- endfor -%}
+    </nav>
+  </div>
+
+  <div class="avocard-site-footer__bottom">
+    {{ section.settings.copyright | escape }}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Avocard footer",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "avocard"
+    },
+    {
+      "type": "url",
+      "id": "logo_link",
+      "label": "Logo link"
+    },
+    {
+      "type": "text",
+      "id": "tagline_line_1",
+      "label": "Tagline line 1",
+      "default": "한국 셀러를 위한 1688 수입대행 플랫폼"
+    },
+    {
+      "type": "text",
+      "id": "tagline_line_2",
+      "label": "Tagline line 2",
+      "default": "구매대행 · 검수 · 통관 · 3PL · 로켓그로스 입고"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright text",
+      "default": "© 2026 Avocard. All rights reserved."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "소개"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard footer",
+      "blocks": [
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "소개"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "서비스"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "수수료"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "프로세스"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "FAQ"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

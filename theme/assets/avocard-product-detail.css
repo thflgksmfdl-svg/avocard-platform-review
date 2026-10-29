@@ -1,0 +1,76 @@
+.av-product-page {
+  --av-green: #2f8f58;
+  --av-green-dark: #247246;
+  --av-lime: #e8ff38;
+  --av-ink: #1f2937;
+  --av-muted: #69756e;
+  --av-line: #dfe8e2;
+  background: #f7faf8;
+  color: var(--av-ink);
+  min-height: 70vh;
+  padding: 48px 20px 80px;
+}
+.av-product-page * { box-sizing: border-box; }
+.av-product-shell { margin: 0 auto; max-width: 1200px; }
+.av-product-status { background: #fff; border: 1px solid var(--av-line); border-radius: 20px; padding: 64px 24px; text-align: center; }
+.av-product-status h1 { font-size: 28px; margin: 0 0 12px; }
+.av-product-status p { color: var(--av-muted); margin: 0 0 24px; }
+.av-product-spinner { animation: av-spin .8s linear infinite; border: 3px solid var(--av-line); border-top-color: var(--av-green); border-radius: 50%; display: inline-block; height: 34px; width: 34px; }
+@keyframes av-spin { to { transform: rotate(360deg); } }
+.av-product-button { background: var(--av-green); border: 0; border-radius: 12px; color: var(--av-lime); display: inline-flex; font: inherit; font-weight: 800; justify-content: center; padding: 14px 22px; text-decoration: none; }
+.av-product-button:disabled { background: #d9dedb; color: #7d8781; cursor: not-allowed; }
+.av-product-toolbar { align-items: center; display: flex; justify-content: space-between; margin-bottom: 20px; }
+.av-product-toolbar > a { color: var(--av-green-dark); font-weight: 700; }
+.av-language-switch { background: #e8efea; border-radius: 999px; display: inline-flex; padding: 4px; }
+.av-language-switch button { background: transparent; border: 0; border-radius: 999px; cursor: pointer; font: inherit; padding: 8px 15px; }
+.av-language-switch button[aria-pressed="true"] { background: #fff; box-shadow: 0 2px 10px rgba(31, 65, 45, .1); color: var(--av-green-dark); font-weight: 800; }
+.av-product-grid { display: grid; gap: 38px; grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr); }
+.av-product-main-media { align-items: center; aspect-ratio: 1; background: #fff; border: 1px solid var(--av-line); border-radius: 20px; display: flex; justify-content: center; overflow: hidden; }
+.av-product-main-media img { height: 100%; object-fit: contain; width: 100%; }
+.av-product-main-media div { color: var(--av-muted); }
+.av-product-thumbnails { display: grid; gap: 10px; grid-auto-columns: 76px; grid-auto-flow: column; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+.av-product-thumbnail { aspect-ratio: 1; background: #fff; border: 2px solid transparent; border-radius: 10px; cursor: pointer; overflow: hidden; padding: 0; }
+.av-product-thumbnail[aria-current="true"] { border-color: var(--av-green); }
+.av-product-thumbnail img { height: 100%; object-fit: cover; width: 100%; }
+.av-product-summary { background: #fff; border: 1px solid var(--av-line); border-radius: 20px; padding: 30px; }
+.av-product-offer-id { color: var(--av-muted); font-size: 12px; margin: 0 0 10px; }
+.av-product-summary h1 { font-size: clamp(24px, 3vw, 34px); line-height: 1.35; margin: 0; word-break: keep-all; }
+.av-product-secondary-title { color: var(--av-muted); margin: 12px 0 0; }
+.av-product-price-card { background: #f1f8f3; border-radius: 14px; margin-top: 24px; padding: 20px; }
+.av-product-price-card span { color: var(--av-muted); display: block; font-size: 13px; }
+.av-product-price-card strong { color: var(--av-green-dark); display: block; font-size: 28px; margin-top: 4px; }
+.av-product-price-card p { color: var(--av-muted); font-size: 12px; margin: 8px 0 0; }
+.av-product-facts { margin: 24px 0 0; }
+.av-product-facts div { border-bottom: 1px solid #edf1ee; display: grid; gap: 16px; grid-template-columns: 130px 1fr; padding: 11px 0; }
+.av-product-facts dt { color: var(--av-muted); }
+.av-product-facts dd { font-weight: 700; margin: 0; text-align: right; }
+.av-price-tiers { margin-top: 24px; }
+.av-price-tiers h2, .av-sku-section h2 { font-size: 20px; margin: 0 0 12px; }
+.av-price-tiers [data-price-tier-list] div { display: flex; justify-content: space-between; padding: 7px 0; }
+.av-sku-section { background: #fff; border: 1px solid var(--av-line); border-radius: 20px; margin-top: 30px; padding: 30px; }
+.av-sku-help { color: var(--av-muted); margin: -5px 0 18px; }
+.av-sku-list { display: grid; gap: 10px; }
+.av-sku-card { align-items: center; border: 1px solid var(--av-line); border-radius: 14px; cursor: pointer; display: grid; gap: 14px; grid-template-columns: auto 64px minmax(0, 1fr) 90px; padding: 12px; }
+.av-sku-card:has(input[type="radio"]:checked) { border-color: var(--av-green); box-shadow: 0 0 0 2px rgba(47, 143, 88, .1); }
+.av-sku-card > img { border-radius: 9px; height: 64px; object-fit: cover; width: 64px; }
+.av-sku-card:not(:has(> img)) { grid-template-columns: auto minmax(0, 1fr) 90px; }
+.av-sku-details { display: flex; flex-direction: column; min-width: 0; }
+.av-sku-details strong { line-height: 1.45; }
+.av-sku-details span { color: var(--av-muted); font-size: 13px; margin-top: 4px; }
+.av-sku-quantity { border: 1px solid #bdc9c1; border-radius: 9px; font: inherit; padding: 9px; width: 90px; }
+.av-cart-panel { align-items: center; background: #f7faf8; border-radius: 14px; display: grid; gap: 12px 24px; grid-template-columns: 1fr 1fr auto; margin-top: 22px; padding: 20px; }
+.av-cart-panel > div { display: flex; flex-direction: column; }
+.av-cart-panel span { color: var(--av-muted); font-size: 12px; }
+.av-cart-panel strong { font-size: 20px; }
+.av-cart-panel p { color: var(--av-muted); font-size: 12px; grid-column: 1 / -1; margin: 0; }
+@media (max-width: 820px) {
+  .av-product-page { padding: 28px 14px 56px; }
+  .av-product-grid { grid-template-columns: 1fr; }
+  .av-product-summary, .av-sku-section { padding: 20px; }
+  .av-sku-card, .av-sku-card:not(:has(> img)) { grid-template-columns: auto 52px minmax(0, 1fr); }
+  .av-sku-card:not(:has(> img)) { grid-template-columns: auto minmax(0, 1fr); }
+  .av-sku-card > img { height: 52px; width: 52px; }
+  .av-sku-quantity { grid-column: 2 / -1; width: 100%; }
+  .av-cart-panel { grid-template-columns: 1fr 1fr; }
+  .av-cart-panel .av-product-button { grid-column: 1 / -1; }
+}

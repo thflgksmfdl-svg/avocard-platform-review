@@ -1,0 +1,43 @@
+{%- if primary_label != blank or secondary_label != blank -%}
+  <div class="avocard-cta-row{% if align == 'center' %} avocard-cta-row--center{% endif %}">
+    {%- if primary_label != blank -%}
+      <a
+        class="avocard-button avocard-button--primary"
+        {% if primary_link == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ primary_link }}"
+        {% endif %}
+      >
+        {{ primary_label | escape }}
+        {%- if primary_icon != blank -%}
+          {%- render 'avocard-icon', name: primary_icon, size: 18 -%}
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+    {%- if secondary_label != blank -%}
+      <a
+        class="avocard-button avocard-button--secondary{% if secondary_style == 'kakao' %} avocard-button--kakao{% endif %}"
+        {% if secondary_link == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ secondary_link }}"
+        {% endif %}
+      >
+        {%- if secondary_style == 'kakao' -%}
+          <img
+            src="{{ 'KakaoTalk_logo.svg' | asset_url }}"
+            alt="KakaoTalk"
+            width="20"
+            height="20"
+            loading="lazy"
+            class="avocard-button__icon-img"
+          >
+        {%- elsif secondary_icon != blank -%}
+          {%- render 'avocard-icon', name: secondary_icon, size: 18 -%}
+        {%- endif -%}
+        {{ secondary_label | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

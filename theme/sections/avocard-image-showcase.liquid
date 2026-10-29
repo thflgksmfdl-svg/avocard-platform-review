@@ -1,0 +1,146 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-band--dark avocard-band--showcase section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    <div class="avocard-trust">
+      {%- if section.settings.badge != blank -%}
+        <p class="avocard-eyebrow avocard-trust__badge">{{ section.settings.badge | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="avocard-heading avocard-heading--section avocard-trust__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.sub_text != blank -%}
+        <p class="avocard-trust__sub">{{ section.settings.sub_text | escape }}</p>
+      {%- endif -%}
+
+      <div class="avocard-trust__stats">
+        <div class="avocard-trust__stat">
+          <strong
+            class="avocard-trust__value"
+            data-count-to="{{ section.settings.stat_1_value | escape }}"
+            data-count-suffix="{{ section.settings.stat_1_suffix | escape }}"
+          ><span class="avocard-trust__value-number">0</span><span class="avocard-trust__value-suffix">{{ section.settings.stat_1_suffix | escape }}</span></strong>
+          <span class="avocard-trust__label">{{ section.settings.stat_1_label | escape }}</span>
+        </div>
+        <div class="avocard-trust__stat">
+          <strong
+            class="avocard-trust__value"
+            data-count-to="{{ section.settings.stat_2_value | escape }}"
+            data-count-suffix="{{ section.settings.stat_2_suffix | escape }}"
+          ><span class="avocard-trust__value-number">0</span><span class="avocard-trust__value-suffix">{{ section.settings.stat_2_suffix | escape }}</span></strong>
+          <span class="avocard-trust__label">{{ section.settings.stat_2_label | escape }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard trust stats",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "셀러가 선택한 아보카드"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "다시 찾고, 오래 함께하는 수입대행"
+    },
+    {
+      "type": "text",
+      "id": "sub_text",
+      "label": "Sub text",
+      "default": "한 번의 이용이 재구매로, 재구매가 오랜 파트너십으로 이어집니다."
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 value (number only)",
+      "default": "93"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_suffix",
+      "label": "Stat 1 suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 label",
+      "default": "재구매율"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Stat 2 value (number only)",
+      "default": "5"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_suffix",
+      "label": "Stat 2 suffix",
+      "default": "년+"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 label",
+      "default": "VIP 셀러 장기 이용"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 104
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard trust stats"
+    }
+  ]
+}
+{% endschema %}

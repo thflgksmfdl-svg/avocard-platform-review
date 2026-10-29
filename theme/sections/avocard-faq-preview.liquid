@@ -1,0 +1,212 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    <div class="avocard-faq__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="avocard-faq__badge">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="avocard-faq__title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="avocard-faq__list">
+      {%- for block in section.blocks -%}
+        <div class="avocard-faq__item" {{ block.shopify_attributes }}>
+          <button type="button" class="avocard-faq__question">
+            <span class="avocard-faq__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="avocard-faq__question-text">{{ block.settings.question | escape }}</span>
+            <span class="avocard-faq__toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </button>
+          <div class="avocard-faq__answer-wrap">
+            <div class="avocard-faq__answer-inner">
+              <div class="avocard-faq__answer">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="avocard-faq__footer">
+      <div class="avocard-faq__footer-copy">
+        <strong>더 궁금한 내용이 있으신가요?</strong>
+        <span>전체 FAQ를 확인하거나 고객센터로 바로 문의해 주세요.</span>
+      </div>
+      <div class="avocard-faq__buttons">
+        {%- if section.settings.primary_label != blank and section.settings.primary_link != blank -%}
+          <a href="{{ section.settings.primary_link }}" class="avocard-faq__btn avocard-faq__btn--primary">
+            {{ section.settings.primary_label | escape }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.secondary_label != blank and section.settings.secondary_link != blank -%}
+          <a href="{{ section.settings.secondary_link }}" target="_blank" rel="noopener noreferrer" class="avocard-faq__btn avocard-faq__btn--secondary">
+            {{ section.settings.secondary_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.avocard-faq__question');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        const currentItem = this.closest('.avocard-faq__item');
+        const allItems = currentItem.closest('.avocard-faq__list').querySelectorAll('.avocard-faq__item');
+
+        allItems.forEach(item => {
+          if (item !== currentItem) {
+            item.classList.remove('is-open');
+          }
+        });
+
+        currentItem.classList.toggle('is-open');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Avocard FAQ preview",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "수입대행, 자주 묻는 질문"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "전체 FAQ 보기"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "카카오톡 문의"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "질문을 입력하세요"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>답변을 입력하세요</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard FAQ preview",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "수입대행은 개인과 사업자 모두 이용할 수 있나요?",
+            "answer": "<p><strong>네, 아보카드 수입대행 서비스는 개인과 사업자 모두 이용할 수 있습니다.</strong></p><p>개인의 경우 자가사용 범위를 초과하는 수량이거나, 인증 또는 수입요건 확인이 필요한 품목은 개인통관으로 진행하기 어려울 수 있습니다.</p><p><strong>진행 가능 여부가 확실하지 않다면 먼저 견적서를 제출한 뒤, 고객센터로 정상 출고 가능 여부를 문의해 주세요.</strong></p><p>확인 후 통관 요건을 준수하는 범위에서 품목별로 적절한 진행 방향을 안내드립니다.</p><p>사업자의 경우 KC 인증, 식품검역, 전기용품 인증 등 수입요건이 있는 품목은 관련 인증자료가 준비되어 있어야 합니다.</p><p>인증 여부가 불확실한 경우 고객센터로 문의해 주세요.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "아보카드 이용 시 적용 환율은 어떤 기준인가요?",
+            "answer": "<p>카드결제 시에는 네이버 중국 환율의 <strong>'송금 보낼 때'</strong> 환율을 기준으로 적용합니다.</p><p>해당 환율은 일반적으로 '현찰 살 때' 환율보다 낮은 기준입니다.</p><p>KRW 송금 시에는 아보카드 전용 환율이 적용됩니다.</p><p>네이버 중국 환율의 <strong>'송금 보낼 때'</strong> 기준에서 약 ±1 범위로 적용될 수 있습니다.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "전체 진행 기간은 얼마나 소요되나요?",
+            "answer": "<p>결제 완료 후 <strong>영업일 기준 약 12일 내외</strong>가 소요됩니다.</p><p>사업자 수입대행은 <strong>영업일 기준 약 2주에서 2주 반</strong> 정도 소요될 수 있습니다.</p><p>중국 판매자의 발송 속도, 현지 물류 상황, 세관 검사 여부와 국내 배송 상황에 따라 일정은 단축되거나 지연될 수 있습니다.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "로켓그로스 센터로 바로 입고할 수 있나요?",
+            "answer": "<p><strong>네, 가능합니다.</strong></p><p>아보카드는 1688 상품 주문부터 중국 창고 입고와 검수까지 지원합니다.</p><p>바코드 부착, 합포장, 밀크런 준비, 박스 교체, 파렛트 작업, 부착문서와 동봉문서 작업도 진행할 수 있습니다.</p><p>한국 도착 후에는 아보카드 3PL 창고 보관, 밀크런 픽업 준비 또는 CJ대한통운 택배 직접 발송 등 고객님의 입고 방식에 맞춰 진행을 도와드립니다.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

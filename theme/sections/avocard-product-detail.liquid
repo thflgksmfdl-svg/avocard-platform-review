@@ -1,0 +1,99 @@
+{{ 'avocard-product-detail.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="av-product-page"
+  data-av-product-detail
+  data-api-base-url="{{ section.settings.api_base_url | strip | escape }}"
+  data-logged-in="{% if customer %}true{% else %}false{% endif %}"
+>
+  <div class="av-product-shell">
+    <div class="av-product-status" data-product-status role="status" aria-live="polite">
+      {% if customer %}
+        <span class="av-product-spinner" aria-hidden="true"></span>
+        <p>상품 정보를 불러오고 있습니다.</p>
+      {% else %}
+        <h1>로그인이 필요합니다</h1>
+        <p>1688 상품 정보와 옵션을 확인하려면 먼저 로그인해 주세요.</p>
+        <a class="av-product-button" data-login-link href="{{ routes.account_login_url }}?return_url={{ request.path | url_encode }}">로그인</a>
+      {% endif %}
+    </div>
+
+    <section class="av-product-content" data-product-content hidden aria-label="1688 상품 상세">
+      <div class="av-product-toolbar">
+        <div class="av-language-switch" role="group" aria-label="상품 언어">
+          <button type="button" data-language="ko" aria-pressed="true">한국어</button>
+          <button type="button" data-language="zh" aria-pressed="false">中文</button>
+        </div>
+        <a data-source-link target="_blank" rel="noopener noreferrer" hidden>1688 원문 보기</a>
+      </div>
+
+      <div class="av-product-grid">
+        <div class="av-product-gallery">
+          <div class="av-product-main-media">
+            <img data-main-image alt="" width="1200" height="1200" hidden>
+            <div data-no-image hidden>등록된 상품 이미지가 없습니다.</div>
+          </div>
+          <div class="av-product-thumbnails" data-thumbnails aria-label="상품 이미지 목록"></div>
+        </div>
+
+        <div class="av-product-summary">
+          <p class="av-product-offer-id" data-offer-id></p>
+          <h1 data-product-title></h1>
+          <p class="av-product-secondary-title" data-secondary-title hidden></p>
+
+          <div class="av-product-price-card">
+            <span>1688 판매가</span>
+            <strong data-price-range>가격 확인 중</strong>
+            <p>표시 금액은 CNY 원가입니다. KRW 참고금액은 결제환율 API 연결 후 제공됩니다.</p>
+          </div>
+
+          <dl class="av-product-facts">
+            <div><dt>최소 주문수량</dt><dd data-moq>-</dd></div>
+            <div><dt>판매자</dt><dd data-seller-name>-</dd></div>
+            <div><dt>판매자 등급</dt><dd data-seller-level>-</dd></div>
+            <div><dt>서비스 점수</dt><dd data-seller-score>-</dd></div>
+            <div><dt>재구매율</dt><dd data-repeat-rate>-</dd></div>
+          </dl>
+
+          <div class="av-price-tiers" data-price-tiers hidden>
+            <h2>수량구간별 단가</h2>
+            <div data-price-tier-list></div>
+          </div>
+        </div>
+      </div>
+
+      <section class="av-sku-section">
+        <h2>SKU 옵션</h2>
+        <p class="av-sku-help">옵션을 선택하고 수량을 입력해 주세요.</p>
+        <div class="av-sku-list" data-sku-list></div>
+        <div class="av-cart-panel">
+          <div><span>선택 수량</span><strong data-selected-quantity>0</strong></div>
+          <div><span>예상 상품금액</span><strong data-selected-total>¥0.00</strong></div>
+          <button class="av-product-button" type="button" data-cart-button disabled>장바구니 연결 예정</button>
+          <p data-cart-message>장바구니 저장 API가 연결되기 전에는 실제로 담기지 않습니다.</p>
+        </div>
+      </section>
+    </section>
+  </div>
+</div>
+
+<script src="{{ 'avocard-product-detail.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "1688 상품 상세",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_base_url",
+      "label": "AVOCARD API 기준 URL",
+      "info": "앱 프록시를 사용하면 비워 두세요. 별도 API origin을 쓸 때만 https://... 형식으로 입력합니다."
+    }
+  ],
+  "presets": [
+    {
+      "name": "1688 상품 상세"
+    }
+  ]
+}
+{% endschema %}

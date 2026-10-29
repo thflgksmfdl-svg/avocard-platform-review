@@ -1,0 +1,43 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .account-edit-notice .notice-section {
+    margin: 4rem 0 0;
+    line-height: calc(1 + 0.6 / var(--font-body-scale));
+  }
+
+  .account-edit-notice .notice-section p {
+    margin: 0 0 1.2rem;
+  }
+
+  .account-edit-notice .contact-button {
+    margin-top: 1rem;
+  }
+
+  .account-edit-notice .password-guide {
+    background: rgba(var(--color-foreground), 0.04);
+    box-shadow: 0 0 0 0.1rem rgba(var(--color-foreground), 0.08);
+    border-radius: var(--inputs-radius, 0);
+    padding: 1.5rem 2rem;
+    margin: 3rem 0 0;
+    font-size: 1.4rem;
+    line-height: calc(1 + 0.6 / var(--font-body-scale));
+  }
+</style>
+
+<div class="avocard-customer-shell">
+<div class="customer register account-edit-notice">
+  <h1>회원정보 수정</h1>
+
+  <div class="notice-section">
+    <p><strong>이름, 이메일, 휴대폰번호 변경이 필요한 경우</strong><br>고객센터로 문의해주세요.</p>
+    <p>본인 확인 후 회원정보 변경을 도와드리겠습니다.</p>
+    <a href="http://pf.kakao.com/_xjppQb/chat" target="_blank" rel="noopener noreferrer" class="button contact-button">카카오톡 문의하기</a>
+  </div>
+
+  <div class="password-guide">
+    <strong>비밀번호를 변경하시려면</strong><br>
+    로그인 페이지의 <strong>비밀번호 찾기</strong>를 이용해주세요.
+  </div>
+</div>
+</div>

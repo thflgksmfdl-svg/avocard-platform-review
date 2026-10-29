@@ -1,0 +1,271 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-proof section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- render 'avocard-section-heading',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.section_description,
+      align: 'left'
+    -%}
+
+    <div class="avocard-proof__risk-banner">
+      <strong>{{ section.settings.risk_title | escape }}</strong>
+      <p>{{ section.settings.risk_text | escape }}</p>
+    </div>
+
+    <div class="avocard-proof__grid">
+      {%- for block in section.blocks -%}
+        <article class="avocard-proof__card" {{ block.shopify_attributes }}>
+          <div class="avocard-proof__card-icon">
+            {{ block.settings.icon_svg }}
+          </div>
+          <h3 class="avocard-proof__card-title">{{ block.settings.title | escape }}</h3>
+          <p class="avocard-proof__card-text">{{ block.settings.text | escape }}</p>
+          <div class="avocard-proof__card-footer">
+            {%- if block.settings.sub_1 != blank -%}
+              <span class="avocard-proof__card-sub">{{ block.settings.sub_1 | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.sub_2 != blank -%}
+              <span class="avocard-proof__card-sub">{{ block.settings.sub_2 | escape }}</span>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    <div class="avocard-proof__video-cta">
+      <div class="avocard-proof__video-content">
+        <h3>{{ section.settings.video_title | escape }}</h3>
+        <p>{{ section.settings.video_text | escape }}</p>
+        {%- if section.settings.video_link != blank -%}
+          <a href="{{ section.settings.video_link }}" target="_blank" rel="noopener noreferrer" class="avocard-proof__video-link">
+            {{ section.settings.video_label | escape }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.video_thumbnail != blank -%}
+        {%- if section.settings.video_link != blank -%}
+          <a
+            href="{{ section.settings.video_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="avocard-proof__video-thumbnail"
+            aria-label="{{ section.settings.video_label | escape }}"
+          >
+        {%- else -%}
+          <div class="avocard-proof__video-thumbnail">
+        {%- endif -%}
+          <img
+            src="{{ section.settings.video_thumbnail }}"
+            alt="아보카드 수입 증빙 안내 영상 썸네일"
+            loading="lazy"
+          />
+          <div class="avocard-proof__video-play-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        {%- if section.settings.video_link != blank -%}
+          </a>
+        {%- else -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard documents",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "수입 증빙"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "세관신고부터 세무회계까지, 증빙은 완벽하게"
+    },
+    {
+      "type": "richtext",
+      "id": "section_description",
+      "label": "Section description",
+      "default": "<p>정상적인 수입 거래에 필요한 증빙 자료를 요청 기준에 맞춰 안내드립니다.</p>"
+    },
+    {
+      "type": "text",
+      "id": "risk_title",
+      "label": "Risk banner title",
+      "default": "70% 이상의 셀러가 잘못된 방법으로 수입한다는 사실, 알고 계셨나요?"
+    },
+    {
+      "type": "textarea",
+      "id": "risk_text",
+      "label": "Risk banner text",
+      "default": "잘못된 방법으로 수입 시 최대 5배까지의 과태료와 매입 취소 위험이 있습니다."
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Video CTA title",
+      "default": "아보카드로 매입 증빙과 수입 증빙까지 체계적으로 준비하세요."
+    },
+    {
+      "type": "text",
+      "id": "video_text",
+      "label": "Video CTA text",
+      "default": "자세한 내용은 유튜브 영상을 참고해주세요."
+    },
+    {
+      "type": "url",
+      "id": "video_link",
+      "label": "Video link"
+    },
+    {
+      "type": "text",
+      "id": "video_label",
+      "label": "Video label",
+      "default": "유튜브에서 보기"
+    },
+    {
+      "type": "url",
+      "id": "video_thumbnail",
+      "label": "Video thumbnail image URL (external allowed)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "document",
+      "name": "Document",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "icon_svg",
+          "label": "Icon SVG markup"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "견적서"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "판매단가와 거래 조건을 확인할 수 있는 기본 견적 자료입니다."
+        },
+        {
+          "type": "text",
+          "id": "sub_1",
+          "label": "Sub info 1",
+          "default": "견적 확인 후 제공"
+        },
+        {
+          "type": "text",
+          "id": "sub_2",
+          "label": "Sub info 2",
+          "default": "품목·수량·단가 및 요청 사항 포함"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard documents",
+      "blocks": [
+        {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><path d=\"M14 2v6h6\"/><path d=\"M8 13h8M8 17h5\"/></svg>",
+            "title": "견적서",
+            "text": "판매단가와 거래 조건을 확인할 수 있는 기본 견적 자료입니다.",
+            "sub_1": "견적 확인 후 제공",
+            "sub_2": "품목·수량·단가 및 요청 사항 확인"
+          }
+        },
+        {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10h18\"/><path d=\"M5 10V7l7-4 7 4v3\"/><path d=\"M5 10v8M9 10v8M15 10v8M19 10v8\"/><path d=\"M3 18h18M2 21h20\"/></svg>",
+            "title": "인보이스 및 송금전문",
+            "text": "해외 법인이 수취한 거래 금액과 송금 내역을 확인할 수 있는 지급 증빙 자료입니다.",
+            "sub_1": "송금 결제 시 제공",
+            "sub_2": "카드결제 시 카드 이용내역으로 대체"
+          }
+        },
+        {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2h9l3 3v17H6z\"/><path d=\"M14 2v4h4\"/><path d=\"M9 11h6M9 15h4\"/><path d=\"m14.5 18 1.4 1.4L19 16.3\"/></svg>",
+            "title": "수입신고필증",
+            "text": "세관에 정식으로 신고된 수입 내역을 확인하는 공식 통관 자료입니다.",
+            "sub_1": "신고 품명·수량·금액 확인",
+            "sub_2": "정식 수입 여부 확인에 활용"
+          }
+        },
+        {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2z\"/><path d=\"M9 8h6M9 12h6M9 16h3\"/></svg>",
+            "title": "수입세금계산서",
+            "text": "수입 부가세와 관련된 세무·회계 처리에 활용할 수 있는 증빙 자료입니다.",
+            "sub_1": "수입 부가세 확인",
+            "sub_2": "사업자 회계 처리 자료로 활용"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

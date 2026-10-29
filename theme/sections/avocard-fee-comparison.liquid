@@ -1,0 +1,242 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="avocard-fee" class="avocard avocard-band avocard-band--soft section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- render 'avocard-section-heading',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.text
+    -%}
+
+    <div class="avocard-fee-cards">
+      <div class="avocard-fee-card avocard-fee-card--highlight avocard-fee-card--transfer">
+        <span class="avocard-fee-card__badge">추천</span>
+        <span class="avocard-fee-card__label">{{ section.settings.transfer_label | escape }}</span>
+        <strong class="avocard-fee-card__value">{{ section.settings.transfer_total | escape }}</strong>
+        {%- if section.settings.transfer_breakdown != blank -%}
+          <span class="avocard-fee-card__breakdown">{{ section.settings.transfer_breakdown | escape }}</span>
+        {%- endif -%}
+        <ul class="avocard-fee-card__list" role="list">
+          {%- for i in (1..4) -%}
+            {%- assign point_key = 'transfer_point_' | append: i -%}
+            {%- assign point_value = section.settings[point_key] -%}
+            {%- if point_value != blank -%}
+              <li>
+                {%- render 'avocard-icon', name: 'check-circle', size: 16 -%}
+                <span>{{ point_value | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="avocard-fee-card avocard-fee-card--card">
+        <span class="avocard-fee-card__label">{{ section.settings.card_label | escape }}</span>
+        <strong class="avocard-fee-card__value">{{ section.settings.card_total | escape }}</strong>
+        {%- if section.settings.card_breakdown != blank -%}
+          <span class="avocard-fee-card__breakdown">{{ section.settings.card_breakdown | escape }}</span>
+        {%- endif -%}
+        <ul class="avocard-fee-card__list" role="list">
+          {%- for i in (1..2) -%}
+            {%- assign point_key = 'card_point_' | append: i -%}
+            {%- assign point_value = section.settings[point_key] -%}
+            {%- if point_value != blank -%}
+              <li>
+                {%- render 'avocard-icon', name: 'check-circle', size: 16 -%}
+                <span>{{ point_value | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+
+    <div class="avocard-fee-notes">
+      <div class="avocard-fee-note">
+        <span class="avocard-fee-note__icon" aria-hidden="true">
+          {%- render 'avocard-icon', name: 'lightbulb', size: 18 -%}
+        </span>
+        <div class="avocard-fee-note__body">
+          <strong>TT송금 안내</strong>
+          <p>{{ section.settings.transfer_note | escape | newline_to_br }}</p>
+        </div>
+      </div>
+      <div class="avocard-fee-note">
+        <div class="avocard-fee-note__body">
+          <strong>카드결제 안내</strong>
+          <p>{{ section.settings.card_note | escape | newline_to_br }}</p>
+        </div>
+      </div>
+    </div>
+
+    {%- if section.settings.detail_link != blank and section.settings.detail_label != blank -%}
+      <div class="avocard-fee__footer">
+        <a href="{{ section.settings.detail_link }}" class="avocard-fee__detail-link">
+          {{ section.settings.detail_label | escape }}
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard fee comparison",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "수수료 안내"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "투명한 수수료, 숨겨진 비용 ZERO"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>결제 방식에 따라 수수료가 달라집니다.</p>"
+    },
+    {
+      "type": "text",
+      "id": "transfer_label",
+      "label": "Transfer label",
+      "default": "TT 송금"
+    },
+    {
+      "type": "text",
+      "id": "transfer_total",
+      "label": "Transfer total",
+      "default": "6%"
+    },
+    {
+      "type": "text",
+      "id": "transfer_breakdown",
+      "label": "Transfer fee breakdown",
+      "default": "구매대행 수수료 6%"
+    },
+    {
+      "type": "text",
+      "id": "card_label",
+      "label": "Card label",
+      "default": "카드 결제"
+    },
+    {
+      "type": "text",
+      "id": "card_total",
+      "label": "Card total",
+      "default": "10%"
+    },
+    {
+      "type": "text",
+      "id": "card_breakdown",
+      "label": "Card fee breakdown",
+      "default": "구매대행 수수료 6% + 해외승인 카드 수수료 4%"
+    },
+    {
+      "type": "text",
+      "id": "transfer_point_1",
+      "label": "TT point 1",
+      "default": "구매대행 수수료 세금계산서 발행"
+    },
+    {
+      "type": "text",
+      "id": "transfer_point_2",
+      "label": "TT point 2",
+      "default": "KRW 원화 송금 (계좌 이체)"
+    },
+    {
+      "type": "text",
+      "id": "transfer_point_3",
+      "label": "TT point 3",
+      "default": "대량 주문 시 유리"
+    },
+    {
+      "type": "text",
+      "id": "card_point_1",
+      "label": "Card point 1",
+      "default": "유일한 해외 승인 카드 결제"
+    },
+    {
+      "type": "text",
+      "id": "card_point_2",
+      "label": "Card point 2",
+      "default": "소량 주문 시 유리"
+    },
+    {
+      "type": "textarea",
+      "id": "transfer_note",
+      "label": "TT note",
+      "default": "아보카드는 해외 법인 G9NOW HK LIMITED가 운영하는 플랫폼으로,\n송금 금액은 해외 법인이 수취합니다.\n따라서 해외송금으로 처리되며, 100% 매입 증빙이 가능합니다."
+    },
+    {
+      "type": "textarea",
+      "id": "card_note",
+      "label": "Card note",
+      "default": "카드결제는 해외 승인으로 처리되어 100% 매입 증빙이 가능합니다.\n단, 카드사에 따라 해외결제 추가 수수료가 발생할 수 있습니다."
+    },
+    {
+      "type": "text",
+      "id": "detail_label",
+      "label": "Detail link label",
+      "default": "자세한 내용 확인하기"
+    },
+    {
+      "type": "url",
+      "id": "detail_link",
+      "label": "Detail link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard fee comparison"
+    }
+  ]
+}
+{% endschema %}

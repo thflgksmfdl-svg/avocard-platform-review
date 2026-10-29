@@ -1,0 +1,248 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="avocard-import" class="avocard avocard-band section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="avocard-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="avocard-heading avocard-heading--section avocard-process__title">
+        <span class="avocard-heading__bar" aria-hidden="true"></span>
+        {{ section.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="avocard-process__desc">{{ section.settings.text | strip_html | escape }}</p>
+    {%- endif -%}
+
+    <div class="avocard-process-shell">
+      <div class="avocard-process-timeline">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'step' -%}
+            <article class="avocard-process-step" {{ block.shopify_attributes }}>
+              <div class="avocard-process-step__head">
+                <div class="avocard-process-step__icon" aria-hidden="true">
+                  {%- render 'avocard-icon', name: block.settings.icon, size: 26 -%}
+                </div>
+                <span class="avocard-process-step__order">{{ block.settings.order_label | escape }}</span>
+              </div>
+              {%- if block.settings.payment_badge != blank -%}
+                <span class="avocard-process-step__badge">{{ block.settings.payment_badge | escape }}</span>
+              {%- endif -%}
+              <h3>{{ block.settings.title | escape }}</h3>
+              <p>{{ block.settings.text | escape | newline_to_br }}</p>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.status_title != blank or section.settings.status_text != blank -%}
+        <div class="avocard-process-status">
+          <div class="avocard-process-status__icon" aria-hidden="true">
+            {%- render 'avocard-icon', name: 'history', size: 26 -%}
+          </div>
+          <div>
+            {%- if section.settings.status_title != blank -%}
+              <strong>{{ section.settings.status_title | escape }}</strong>
+            {%- endif -%}
+            {%- if section.settings.status_text != blank -%}
+              <span>{{ section.settings.status_text | escape }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard import service",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "1688 수입대행"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "견적 신청부터 국내 입고까지, 6단계로 안내드립니다"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>복잡한 수입 과정을 아보카드가 단계별로 처리합니다.</p>"
+    },
+    {
+      "type": "text",
+      "id": "status_title",
+      "label": "Status panel title",
+      "default": "아보카드 전용 주문페이지에서 진행 상황을 실시간으로 확인하세요"
+    },
+    {
+      "type": "textarea",
+      "id": "status_text",
+      "label": "Status panel text",
+      "default": "주문, 중국 입고, 검수, 작업, 출고, 통관, 국내 배송까지 현재 단계를 한눈에 확인할 수 있습니다."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "file-text", "label": "File text" },
+            { "value": "credit-card", "label": "Credit card" },
+            { "value": "warehouse", "label": "Warehouse" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "package", "label": "Package" },
+            { "value": "zap", "label": "Zap" }
+          ],
+          "default": "file-text"
+        },
+        {
+          "type": "text",
+          "id": "order_label",
+          "label": "Order label",
+          "default": "STEP 01"
+        },
+        {
+          "type": "text",
+          "id": "payment_badge",
+          "label": "Badge label",
+          "default": "견적 확인"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "견적 신청"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "가이드를 참고해 견적서를 작성해 주시면, 담당자가 확인 후 견적을 드리고 있습니다."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard import service",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "icon": "file-text",
+            "order_label": "STEP 01",
+            "payment_badge": "견적 확인",
+            "title": "견적 신청",
+            "text": "가이드를 참고해 견적서를 작성해 주시면, \n담당자가 확인 후 견적을 드리고 있습니다."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "credit-card",
+            "order_label": "STEP 02",
+            "payment_badge": "1차 결제",
+            "title": "물품대금·수수료 결제",
+            "text": "견적서를 확인 후 물품 대금 및 \n구매대행 수수료를 결제합니다. \n결제 확인 후 중국 판매자에게 \n발주가 진행됩니다."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "warehouse",
+            "order_label": "STEP 03",
+            "payment_badge": "중국 창고",
+            "title": "입고·검수·작업",
+            "text": "상품 입고 후 검수·포장·바코드 \n부착 등 요청 작업을 진행하고 \n최종 무게를 측정합니다."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "truck",
+            "order_label": "STEP 04",
+            "payment_badge": "2차 결제",
+            "title": "국제운임 결제·출고",
+            "text": "실측 무게 or CBM 중 \n더 저렴한 방식으로 계산 후 \n안내드리고 있습니다."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "package",
+            "order_label": "STEP 05",
+            "payment_badge": "3차 결제",
+            "title": "국제배송·통관",
+            "text": "개인통관 또는 사업자 통관 \n방식에 맞춰 진행되며, \n사업자 통관 시 관부가세 등 비용은 \n관세사 측에 직접 납부해 주시면 됩니다."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "zap",
+            "order_label": "STEP 06",
+            "payment_badge": "국내 도착",
+            "title": "국내 배송·입고",
+            "text": "희망 주소지 배송부터 \n국내 3PL 보관, \n로켓그로스 입고까지 모두 지원합니다."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

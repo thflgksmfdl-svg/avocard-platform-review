@@ -1,0 +1,1421 @@
+{%- style -%}
+  #section-{{ section.id }} {
+    --guide-green: #0eaa50;
+    --guide-green-dark: #08783a;
+    --guide-green-deep: #063b25;
+    --guide-green-soft: #eaf8ef;
+    --guide-green-pale: #f7fcf8;
+    --guide-lime: #d8f45b;
+    --guide-orange: #ff6b1a;
+    --guide-orange-soft: #fff4eb;
+    --guide-ink: #111927;
+    --guide-muted: #5f6d7b;
+    --guide-line: #dfe8e3;
+    --guide-page: #f5f8f6;
+    --guide-white: #fff;
+    --guide-shadow: 0 18px 48px rgba(17, 67, 39, 0.075);
+    --guide-container: 1120px;
+  }
+
+  #section-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #section-{{ section.id }} {
+    scroll-behavior: smooth;
+    color: var(--guide-ink);
+    background: var(--guide-page);
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+    word-break: keep-all;
+  }
+
+  #section-{{ section.id }}.modal-open {
+    overflow: hidden;
+  }
+
+  #section-{{ section.id }} a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #section-{{ section.id }} button {
+    font: inherit;
+  }
+
+  .avocard-guide-container {
+    width: min(calc(100% - 40px), var(--guide-container));
+    margin: 0 auto;
+  }
+
+  .avocard-guide-hero {
+    padding: 88px 0 66px;
+    color: #fff;
+    background:
+      radial-gradient(circle at 86% 12%, rgba(216, 244, 91, 0.18), transparent 28%),
+      radial-gradient(circle at 8% 92%, rgba(65, 213, 132, 0.16), transparent 30%),
+      linear-gradient(135deg, #0d9248 0%, #08713a 56%, #05381f 100%);
+  }
+
+  .avocard-guide-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 35px;
+    padding: 7px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    font-weight: 850;
+    backdrop-filter: blur(10px);
+  }
+
+  .avocard-guide-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--guide-lime);
+    box-shadow: 0 0 0 5px rgba(216, 244, 91, 0.12);
+  }
+
+  .avocard-guide-hero h1 {
+    margin: 24px 0 14px;
+    font-size: clamp(42px, 5vw, 66px);
+    line-height: 1.08;
+    letter-spacing: -0.06em;
+    font-weight: 950;
+  }
+
+  .avocard-guide-hero h1 span {
+    color: var(--guide-lime);
+  }
+
+  .avocard-guide-hero p {
+    margin: 0;
+    max-width: 760px;
+    color: rgba(240, 255, 246, 0.84);
+    font-size: 18px;
+    line-height: 1.8;
+    letter-spacing: -0.02em;
+  }
+
+  .avocard-guide-nav-wrap {
+    margin-top: -22px;
+  }
+
+  .avocard-guide-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: var(--guide-shadow);
+  }
+
+  .avocard-guide-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 66px;
+    padding: 14px;
+    border-right: 1px solid var(--guide-line);
+    color: #43505f;
+    font-size: 14px;
+    font-weight: 850;
+    text-align: center;
+    transition: color 0.18s ease, background 0.18s ease;
+  }
+
+  .avocard-guide-nav a:last-child {
+    border-right: 0;
+  }
+
+  .avocard-guide-nav.four-steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .avocard-guide-nav a:hover {
+    color: var(--guide-green-dark);
+    background: var(--guide-green-pale);
+  }
+
+  .avocard-guide-nav-num {
+    color: var(--guide-green);
+    font-weight: 950;
+  }
+
+  .avocard-guide-main {
+    padding: 54px 0 96px;
+  }
+
+  .avocard-guide-browser-note {
+    margin-bottom: 28px;
+    padding: 18px 22px;
+    border: 1px solid rgba(14, 170, 80, 0.16);
+    border-radius: 18px;
+    color: #52606f;
+    background: var(--guide-green-soft);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .avocard-guide-browser-note strong {
+    color: var(--guide-green-dark);
+    font-weight: 900;
+  }
+
+  .avocard-guide-steps {
+    display: grid;
+    gap: 28px;
+  }
+
+  .avocard-guide-step {
+    scroll-margin-top: 100px;
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: var(--guide-shadow);
+  }
+
+  .avocard-guide-step-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--guide-line);
+    background: radial-gradient(circle at 96% 0%, rgba(216, 244, 91, 0.17), transparent 27%), linear-gradient(135deg, #f8fff9 0%, #eff9f3 100%);
+  }
+
+  .avocard-guide-step-no {
+    min-width: 78px;
+    color: var(--guide-green);
+    font-size: 54px;
+    line-height: 1;
+    letter-spacing: -0.07em;
+    font-weight: 950;
+  }
+
+  .avocard-guide-step.helper-step .avocard-guide-step-no {
+    font-size: 24px;
+    letter-spacing: -0.03em;
+    min-width: 78px;
+  }
+
+  .avocard-guide-step-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--guide-green-dark);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+  }
+
+  .avocard-guide-step-title {
+    margin: 0;
+    font-size: clamp(27px, 3vw, 39px);
+    line-height: 1.25;
+    letter-spacing: -0.05em;
+    font-weight: 950;
+  }
+
+  .avocard-guide-step-content {
+    padding: 30px 32px 34px;
+  }
+
+  .avocard-guide-step-copy p {
+    margin: 0;
+    color: var(--guide-muted);
+    font-size: 17px;
+    line-height: 1.95;
+    letter-spacing: -0.018em;
+  }
+
+  .avocard-guide-step-copy p + p {
+    margin-top: 14px;
+  }
+
+  .avocard-guide-step-copy strong {
+    color: var(--guide-ink);
+    font-weight: 900;
+  }
+
+  .avocard-guide-callout {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: 18px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    color: var(--guide-green-dark);
+    background: var(--guide-green-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 850;
+  }
+
+  .avocard-guide-callout.warning {
+    color: #b94a10;
+    background: var(--guide-orange-soft);
+  }
+
+  .avocard-guide-callout svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-top: 2px;
+  }
+
+  .avocard-guide-image {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin-top: 22px;
+    border: 1px solid #d9e3dd;
+    border-radius: 18px;
+    background: #eef4f0;
+    cursor: zoom-in;
+    box-shadow: 0 12px 28px rgba(20, 72, 43, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .avocard-guide-image:hover {
+    transform: translateY(-3px);
+    border-color: rgba(14, 170, 80, 0.34);
+    box-shadow: 0 18px 36px rgba(20, 72, 43, 0.1);
+  }
+
+  .avocard-guide-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .avocard-guide-zoom-label {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(7, 59, 36, 0.84);
+    font-size: 12px;
+    font-weight: 850;
+    backdrop-filter: blur(8px);
+  }
+
+  .avocard-guide-zoom-label svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .avocard-guide-accordion {
+    margin-top: 18px;
+    border: 1px solid rgba(14, 170, 80, 0.18);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(18, 67, 39, 0.04);
+    overflow: hidden;
+  }
+
+  .avocard-guide-accordion-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 20px;
+    border: 0;
+    background: var(--guide-green-pale);
+    cursor: pointer;
+    color: var(--guide-ink);
+    text-align: left;
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .avocard-guide-accordion-toggle small {
+    display: block;
+    margin-top: 4px;
+    color: var(--guide-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .avocard-guide-accordion-toggle .icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    transition: transform 0.18s ease;
+  }
+
+  .avocard-guide-accordion-toggle[aria-expanded="true"] .icon {
+    transform: rotate(180deg);
+  }
+
+  .avocard-guide-accordion-panel {
+    display: none;
+    padding: 20px;
+  }
+
+  .avocard-guide-accordion-panel.open {
+    display: block;
+  }
+
+  .avocard-guide-accordion-note {
+    margin: 0 0 16px;
+    color: var(--guide-muted);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .avocard-guide-copy-box {
+    display: block;
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px dashed rgba(14, 170, 80, 0.4);
+    border-radius: 14px;
+    background: var(--guide-green-soft);
+    color: var(--guide-green-deep);
+    font-size: 15px;
+    line-height: 1.9;
+    font-weight: 850;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .avocard-guide-copy-box:hover {
+    background: #e2f4e9;
+  }
+
+  .avocard-guide-copy-help {
+    margin: 10px 0 0;
+    color: #70808f;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .avocard-guide-sub-image {
+    margin-top: 16px;
+  }
+
+  .avocard-guide-copy-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: #0b1710;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 10000;
+  }
+
+  .avocard-guide-copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .avocard-guide-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 30px;
+    align-items: center;
+    margin-top: 32px;
+    padding: 32px 34px;
+    border: 1px solid var(--guide-line);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: var(--guide-shadow);
+  }
+
+  .avocard-guide-cta h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    letter-spacing: -0.04em;
+  }
+
+  .avocard-guide-cta p {
+    margin: 0;
+    color: var(--guide-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .avocard-guide-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .avocard-guide-cta-btn {
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 18px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 900;
+    transition: transform 0.18s ease;
+  }
+
+  .avocard-guide-cta-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .avocard-guide-cta-btn.primary {
+    color: #fff;
+    background: var(--guide-green);
+    box-shadow: 0 13px 28px rgba(14, 170, 80, 0.18);
+  }
+
+  .avocard-guide-cta-btn.secondary {
+    color: var(--guide-green-dark);
+    border-color: rgba(14, 170, 80, 0.24);
+    background: var(--guide-green-soft);
+  }
+
+  .avocard-guide-cta-btn svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .avocard-guide-step-apply-cta {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 24px;
+  }
+
+  .avocard-guide-step-apply-button {
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 15px 22px;
+    border-radius: 15px;
+    color: #fff;
+    background: var(--guide-green);
+    font-size: 16px;
+    font-weight: 900;
+    box-shadow: 0 14px 30px rgba(14, 170, 80, 0.2);
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
+
+  .avocard-guide-step-apply-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.03);
+  }
+
+  .avocard-guide-step-apply-button svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .avocard-guide-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    place-items: center;
+    padding: 28px;
+    background: rgba(3, 17, 10, 0.86);
+    backdrop-filter: blur(10px);
+  }
+
+  .avocard-guide-lightbox.is-open {
+    display: grid;
+  }
+
+  .avocard-guide-lightbox-dialog {
+    position: relative;
+    max-width: min(90vw, 1200px);
+    max-height: 90vh;
+    width: 100%;
+    background: #fff;
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+  }
+
+  .avocard-guide-lightbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--guide-line);
+    background: var(--guide-page);
+  }
+
+  .avocard-guide-lightbox-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--guide-ink);
+  }
+
+  .avocard-guide-lightbox-controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  .avocard-guide-lightbox-control {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--guide-line);
+    background: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .avocard-guide-lightbox-control:hover {
+    background: var(--guide-green);
+    color: #fff;
+    border-color: var(--guide-green);
+  }
+
+  .avocard-guide-lightbox-control svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .avocard-guide-lightbox-stage {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .avocard-guide-lightbox-stage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .avocard-guide-nav {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .avocard-guide-step-header {
+      padding: 20px 24px;
+    }
+
+    .avocard-guide-step-no {
+      font-size: 40px;
+    }
+
+    .avocard-guide-step-title {
+      font-size: 24px;
+    }
+
+    .avocard-guide-step-content {
+      padding: 24px;
+    }
+
+    .avocard-guide-cta {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .avocard-guide-cta-actions {
+      justify-content: stretch;
+    }
+
+    .avocard-guide-cta-btn {
+      flex: 1;
+    }
+
+    .avocard-guide-lightbox-dialog {
+      border-radius: 20px;
+    }
+
+    .avocard-guide-lightbox-header {
+      padding: 16px 20px;
+    }
+
+    .avocard-guide-lightbox-stage {
+      padding: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .avocard-guide-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .avocard-guide-nav a {
+      min-height: 56px;
+      font-size: 13px;
+      padding: 10px;
+    }
+
+    .avocard-guide-hero {
+      padding: 60px 0 40px;
+    }
+
+    .avocard-guide-hero h1 {
+      font-size: 32px;
+    }
+
+    .avocard-guide-step-header {
+      padding: 16px 20px;
+    }
+
+    .avocard-guide-step-no {
+      font-size: 28px;
+      min-width: 50px;
+    }
+
+    .avocard-guide-step-title {
+      font-size: 18px;
+    }
+
+    .avocard-guide-step-content {
+      padding: 16px 20px;
+    }
+
+    .avocard-guide-step-copy p {
+      font-size: 15px;
+    }
+
+    .avocard-guide-copy-box {
+      font-size: 13px;
+      padding: 12px 16px;
+    }
+
+    .avocard-guide-step-apply-button {
+      width: 100%;
+    }
+  }
+{%- endstyle -%}
+
+<div id="section-{{ section.id }}" class="avocard-guide-wrapper">
+  <section class="avocard-guide-hero">
+    <div class="avocard-guide-container">
+      <div class="avocard-guide-badge">
+        <span>{{ section.settings.guide_badge | escape }}</span>
+      </div>
+      <h1>{{ section.settings.guide_title | escape }}<span>{{ section.settings.guide_title_highlight | escape }}</span></h1>
+      <p>{{ section.settings.guide_description | newline_to_br }}</p>
+
+      <div class="avocard-guide-nav-wrap">
+        <nav class="avocard-guide-nav">
+          <a href="#step-1"><span class="avocard-guide-nav-num">{{ section.settings.nav_step1_num | escape }}</span> {{ section.settings.nav_step1_label | escape }}</a>
+          <a href="#step-address"><span class="avocard-guide-nav-num">주소</span> {{ section.settings.nav_address_label | escape }}</a>
+          <a href="#step-2"><span class="avocard-guide-nav-num">{{ section.settings.nav_step2_num | escape }}</span> {{ section.settings.nav_step2_label | escape }}</a>
+          <a href="#step-3"><span class="avocard-guide-nav-num">{{ section.settings.nav_step3_num | escape }}</span> {{ section.settings.nav_step3_label | escape }}</a>
+          <a href="#step-4"><span class="avocard-guide-nav-num">{{ section.settings.nav_step4_num | escape }}</span> {{ section.settings.nav_step4_label | escape }}</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <main class="avocard-guide-main">
+    <div class="avocard-guide-container">
+      <div class="avocard-guide-browser-note">
+        ※ 본 가이드는 <strong>{{ section.settings.browser_note_title | escape }}</strong>를 기준으로 제작되었습니다.
+      </div>
+
+      <div class="avocard-guide-steps">
+        <section class="avocard-guide-step" id="step-1">
+          <header class="avocard-guide-step-header">
+            <div class="avocard-guide-step-no">{{ section.settings.step1_number | escape }}</div>
+            <div>
+              <span class="avocard-guide-step-kicker">{{ section.settings.step1_kicker | escape }}</span>
+              <h2 class="avocard-guide-step-title">{{ section.settings.step1_title | escape }}</h2>
+            </div>
+          </header>
+
+          <div class="avocard-guide-step-content">
+            <div class="avocard-guide-step-copy">
+              <p>{{ section.settings.step1_description | newline_to_br }}</p>
+            </div>
+            <div class="avocard-guide-callout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 9v4M12 17h.01"></path>
+                <path d="M10.3 3.7 2.8 17a2 2 0 0 0 1.74 3h14.92a2 2 0 0 0 1.74-3L13.7 3.7a2 2 0 0 0-3.4 0Z"></path>
+              </svg>
+              <span>{{ section.settings.step1_callout | escape }}</span>
+            </div>
+            <div class="avocard-guide-image" data-title="{{ section.settings.step1_image_alt | escape }}">
+              <img
+                src="{{ 'usage-guide-step-1.webp' | asset_url }}"
+                alt="{{ section.settings.step1_image_alt | escape }}"
+                width="1896"
+                height="829"
+                loading="lazy"
+              >
+              <div class="avocard-guide-zoom-label">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 8l-3.5-3.5M3 21l3-3m0-3a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
+                </svg>
+                {{ section.settings.zoom_label | escape }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="avocard-guide-step helper-step" id="step-address">
+          <header class="avocard-guide-step-header">
+            <div class="avocard-guide-step-no">?</div>
+            <div>
+              <span class="avocard-guide-step-kicker">{{ section.settings.address_kicker | escape }}</span>
+              <h2 class="avocard-guide-step-title">{{ section.settings.address_title | escape }}</h2>
+            </div>
+          </header>
+
+          <div class="avocard-guide-step-content">
+            <div class="avocard-guide-accordion">
+              <button class="avocard-guide-accordion-toggle" type="button" aria-expanded="false" aria-controls="addressPanel">
+                {{ section.settings.address_accordion_title | escape }}
+                <small>{{ section.settings.address_accordion_subtitle | escape }}</small>
+                <span class="icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </span>
+              </button>
+              <div class="avocard-guide-accordion-panel" id="addressPanel">
+                <p class="avocard-guide-accordion-note">{{ section.settings.address_accordion_note | escape }}</p>
+                <button class="avocard-guide-copy-box" type="button" data-copy="{{ section.settings.address_copy_text | escape }}">
+                  {{ section.settings.address_display | escape }}
+                </button>
+                <p class="avocard-guide-copy-help">{{ section.settings.address_copy_help | escape }}</p>
+              </div>
+            </div>
+
+            <div class="avocard-guide-image" data-title="{{ section.settings.step_address_image_alt | escape }}">
+              <img
+                src="{{ 'usage-guide-step-2.webp' | asset_url }}"
+                alt="{{ section.settings.step_address_image_alt | escape }}"
+                width="590"
+                height="501"
+                loading="lazy"
+              >
+              <div class="avocard-guide-zoom-label">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 8l-3.5-3.5M3 21l3-3m0-3a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
+                </svg>
+                {{ section.settings.zoom_label | escape }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="avocard-guide-step" id="step-2">
+          <header class="avocard-guide-step-header">
+            <div class="avocard-guide-step-no">{{ section.settings.step2_number | escape }}</div>
+            <div>
+              <span class="avocard-guide-step-kicker">{{ section.settings.step2_kicker | escape }}</span>
+              <h2 class="avocard-guide-step-title">{{ section.settings.step2_title | escape }}</h2>
+            </div>
+          </header>
+
+          <div class="avocard-guide-step-content">
+            <div class="avocard-guide-step-copy">
+              <p>{{ section.settings.step2_description | newline_to_br }}</p>
+            </div>
+            <div class="avocard-guide-image" data-title="{{ section.settings.step2_image_alt | escape }}">
+              <img
+                src="{{ 'usage-guide-step-3.webp' | asset_url }}"
+                alt="{{ section.settings.step2_image_alt | escape }}"
+                width="1448"
+                height="1086"
+                loading="lazy"
+              >
+              <div class="avocard-guide-zoom-label">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 8l-3.5-3.5M3 21l3-3m0-3a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
+                </svg>
+                {{ section.settings.zoom_label | escape }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="avocard-guide-step" id="step-3">
+          <header class="avocard-guide-step-header">
+            <div class="avocard-guide-step-no">{{ section.settings.step3_number | escape }}</div>
+            <div>
+              <span class="avocard-guide-step-kicker">{{ section.settings.step3_kicker | escape }}</span>
+              <h2 class="avocard-guide-step-title">{{ section.settings.step3_title | escape }}</h2>
+            </div>
+          </header>
+
+          <div class="avocard-guide-step-content">
+            <div class="avocard-guide-step-copy">
+              <p>{{ section.settings.step3_description | newline_to_br }}</p>
+            </div>
+            <div class="avocard-guide-callout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 7 9 18l-5-5"></path>
+              </svg>
+              <span>{{ section.settings.step3_info | escape }}</span>
+            </div>
+            <div class="avocard-guide-image" data-title="{{ section.settings.step3_image_alt | escape }}">
+              <img
+                src="{{ 'usage-guide-step-4.webp' | asset_url }}"
+                alt="{{ section.settings.step3_image_alt | escape }}"
+                width="990"
+                height="1319"
+                loading="lazy"
+              >
+              <div class="avocard-guide-zoom-label">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 8l-3.5-3.5M3 21l3-3m0-3a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
+                </svg>
+                {{ section.settings.zoom_label | escape }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="avocard-guide-step" id="step-4">
+          <header class="avocard-guide-step-header">
+            <div class="avocard-guide-step-no">{{ section.settings.step4_number | escape }}</div>
+            <div>
+              <span class="avocard-guide-step-kicker">{{ section.settings.step4_kicker | escape }}</span>
+              <h2 class="avocard-guide-step-title">{{ section.settings.step4_title | escape }}</h2>
+            </div>
+          </header>
+
+          <div class="avocard-guide-step-content">
+            <div class="avocard-guide-step-copy">
+              <p>{{ section.settings.step4_description | newline_to_br }}</p>
+            </div>
+
+            <div class="avocard-guide-step-apply-cta">
+              <a class="avocard-guide-step-apply-button" href="{{ section.settings.step4_apply_url }}">
+                {{ section.settings.step4_apply_label | escape }}
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 12h14M14 7l5 5-5 5"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="avocard-guide-copy-toast" id="copyToast">{{ section.settings.toast_message | escape }}</div>
+
+  <div class="avocard-guide-lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="lightboxTitle">
+    <div class="avocard-guide-lightbox-dialog">
+      <div class="avocard-guide-lightbox-header">
+        <span class="avocard-guide-lightbox-title" id="lightboxTitle">{{ section.settings.lightbox_title | escape }}</span>
+        <div class="avocard-guide-lightbox-controls">
+          <button class="avocard-guide-lightbox-control" id="prevButton" type="button" aria-label="{{ section.settings.lightbox_prev_label | escape }}">
+            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <button class="avocard-guide-lightbox-control" id="nextButton" type="button" aria-label="{{ section.settings.lightbox_next_label | escape }}">
+            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+          <button class="avocard-guide-lightbox-control" id="closeButton" type="button" aria-label="{{ section.settings.lightbox_close_label | escape }}">
+            <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="avocard-guide-lightbox-stage" id="lightboxStage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const sectionId = 'section-{{ section.id }}';
+    const sectionEl = document.getElementById(sectionId);
+
+    if (!sectionEl) return;
+
+    const items = [...sectionEl.querySelectorAll('.avocard-guide-image')];
+    const lightbox = sectionEl.querySelector('#lightbox');
+    const stage = sectionEl.querySelector('#lightboxStage');
+    const title = sectionEl.querySelector('#lightboxTitle');
+    const closeButton = sectionEl.querySelector('#closeButton');
+    const prevButton = sectionEl.querySelector('#prevButton');
+    const nextButton = sectionEl.querySelector('#nextButton');
+    const accordionBtn = sectionEl.querySelector('.avocard-guide-accordion-toggle');
+    const accordionPanel = sectionEl.querySelector('#addressPanel');
+    const copyBox = sectionEl.querySelector('.avocard-guide-copy-box');
+    const copyToast = sectionEl.querySelector('#copyToast');
+
+    let currentIndex = 0;
+    let lastFocusedElement = null;
+    let initialized = false;
+
+    function renderItem(index) {
+      if (items.length === 0) return;
+      const item = items[index];
+      const image = item.querySelector('img');
+      const enlargedImage = document.createElement('img');
+      title.textContent = item.dataset.title || '가이드 이미지';
+      stage.innerHTML = '';
+      enlargedImage.src = image.currentSrc || image.src;
+      enlargedImage.alt = image.alt;
+      stage.appendChild(enlargedImage);
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lastFocusedElement = document.activeElement;
+      renderItem(currentIndex);
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      sectionEl.classList.add('modal-open');
+      closeButton.focus();
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      sectionEl.classList.remove('modal-open');
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+
+    function showPrevious() {
+      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      renderItem(currentIndex);
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % items.length;
+      renderItem(currentIndex);
+    }
+
+    function showToast(message) {
+      copyToast.textContent = message;
+      copyToast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => copyToast.classList.remove('show'), 1800);
+    }
+
+    function init() {
+      if (initialized) return;
+      initialized = true;
+
+      items.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index));
+      });
+
+      closeButton.addEventListener('click', closeLightbox);
+      prevButton.addEventListener('click', showPrevious);
+      nextButton.addEventListener('click', showNext);
+
+      lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') closeLightbox();
+        if (event.key === 'ArrowLeft') showPrevious();
+        if (event.key === 'ArrowRight') showNext();
+      });
+
+      if (accordionBtn) {
+        accordionBtn.addEventListener('click', () => {
+          const expanded = accordionBtn.getAttribute('aria-expanded') === 'true';
+          accordionBtn.setAttribute('aria-expanded', String(!expanded));
+          accordionPanel.classList.toggle('open', !expanded);
+        });
+      }
+
+      if (copyBox) {
+        copyBox.addEventListener('click', async () => {
+          const value = copyBox.dataset.copy;
+          try {
+            await navigator.clipboard.writeText(value);
+            showToast('주소가 복사되었습니다.');
+          } catch (e) {
+            const temp = document.createElement('textarea');
+            temp.value = value;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            temp.remove();
+            showToast('주소가 복사되었습니다.');
+          }
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Avocard 이용가이드",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "guide_badge",
+      "label": "배지 텍스트",
+      "default": "AVOCARD GUIDE · CORRECTED VERSION"
+    },
+    {
+      "type": "text",
+      "id": "guide_title",
+      "label": "제목",
+      "default": "아보카드 "
+    },
+    {
+      "type": "text",
+      "id": "guide_title_highlight",
+      "label": "제목 강조 부분",
+      "default": "이용가이드"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_description",
+      "label": "설명",
+      "default": "1688 주문내역을 PDF로 저장한 뒤\n아보카드 수입대행 신청서에 첨부하는 방법입니다."
+    },
+    {
+      "type": "text",
+      "id": "nav_step1_num",
+      "label": "Step 1 번호",
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "nav_step1_label",
+      "label": "Step 1 레이블",
+      "default": "1688에서 주문 확인"
+    },
+    {
+      "type": "text",
+      "id": "nav_address_label",
+      "label": "주소 단계 레이블",
+      "default": "배송지 입력"
+    },
+    {
+      "type": "text",
+      "id": "nav_step2_num",
+      "label": "Step 2 번호",
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "nav_step2_label",
+      "label": "Step 2 레이블",
+      "default": "1688 총 금액 확인"
+    },
+    {
+      "type": "text",
+      "id": "nav_step3_num",
+      "label": "Step 3 번호",
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "nav_step3_label",
+      "label": "Step 3 레이블",
+      "default": "PDF로 저장"
+    },
+    {
+      "type": "text",
+      "id": "nav_step4_num",
+      "label": "Step 4 번호",
+      "default": "4"
+    },
+    {
+      "type": "text",
+      "id": "nav_step4_label",
+      "label": "Step 4 레이블",
+      "default": "신청서 제출"
+    },
+    {
+      "type": "text",
+      "id": "browser_note_title",
+      "label": "브라우저 안내 강조 텍스트",
+      "default": "PC 크롬 브라우저"
+    },
+    {
+      "type": "text",
+      "id": "step1_number",
+      "label": "Step 1 번호 (콘텐츠)",
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "step1_kicker",
+      "label": "Step 1 부제목",
+      "default": "STEP 01"
+    },
+    {
+      "type": "text",
+      "id": "step1_title",
+      "label": "Step 1 제목",
+      "default": "주문할 상품을 선택해 주세요"
+    },
+    {
+      "type": "textarea",
+      "id": "step1_description",
+      "label": "Step 1 설명",
+      "default": "셀러님 아이디로 1688에 접속하여 구매 하고자 하는 상품을 내 장바구니(采购车)에 추가해 주세요.\n견적 의뢰할 상품만 선택한 뒤 오른쪽의 주황색 결제 버튼(结算)을 클릭합니다."
+    },
+    {
+      "type": "text",
+      "id": "step1_callout",
+      "label": "Step 1 안내 문구",
+      "default": "중국어 인 상태에서 진행해주세요."
+    },
+    {
+      "type": "text",
+      "id": "step1_image_alt",
+      "label": "Step 1 이미지 alt 텍스트",
+      "default": "STEP 1 · 견적 의뢰 상품 선택 및 결제 버튼 클릭"
+    },
+    {
+      "type": "text",
+      "id": "address_kicker",
+      "label": "주소 단계 부제목",
+      "default": "ADDRESS GUIDE"
+    },
+    {
+      "type": "text",
+      "id": "address_title",
+      "label": "주소 단계 제목",
+      "default": "주소를 모르면 아보카드 주소지를 입력해 주세요"
+    },
+    {
+      "type": "text",
+      "id": "address_accordion_title",
+      "label": "주소 어코디언 제목",
+      "default": "주소를 모르면 아보카드 주소지를 입력해 주세요"
+    },
+    {
+      "type": "text",
+      "id": "address_accordion_subtitle",
+      "label": "주소 어코디언 부제목",
+      "default": "눌러서 열기 · 주소 클릭 시 자동 복사"
+    },
+    {
+      "type": "textarea",
+      "id": "address_accordion_note",
+      "label": "주소 어코디언 안내",
+      "default": "1688에서 주소지 설정 창이 나오면 맨 상단 입력칸에 아래 주소를 붙여 넣고 自动填写(자동입력) 버튼을 눌러 주세요."
+    },
+    {
+      "type": "textarea",
+      "id": "address_display",
+      "label": "주소 표시 텍스트",
+      "default": "山东省 威海市 环翠区 凤林街道 国泰路-107-3号凯佰通公司(3942) / 付先生(3942) / 18563141070 / 264200"
+    },
+    {
+      "type": "textarea",
+      "id": "address_copy_text",
+      "label": "주소 복사 텍스트 (정확한 주소)",
+      "default": "山东省 威海市 环翠区 凤林街道 国泰路-107-3号凯佰通公司(3942) / 付先生(3942) / 18563141070 / 264200"
+    },
+    {
+      "type": "text",
+      "id": "address_copy_help",
+      "label": "주소 복사 도움말",
+      "default": "주소를 클릭하면 바로 복사됩니다."
+    },
+    {
+      "type": "text",
+      "id": "step_address_image_alt",
+      "label": "주소 단계 이미지 alt 텍스트",
+      "default": "STEP 2 · 아보카드 주소지 자동입력"
+    },
+    {
+      "type": "text",
+      "id": "step2_number",
+      "label": "Step 2 번호 (콘텐츠)",
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "step2_kicker",
+      "label": "Step 2 부제목",
+      "default": "STEP 02"
+    },
+    {
+      "type": "text",
+      "id": "step2_title",
+      "label": "Step 2 제목",
+      "default": "최종 결제금액을 확인해 주세요"
+    },
+    {
+      "type": "textarea",
+      "id": "step2_description",
+      "label": "Step 2 설명",
+      "default": "중국 내륙 배송비가 포함된 최종 결제금액을 확인해 주세요.\n화면에서 마우스 오른쪽 버튼을 누른 뒤 인쇄를 클릭합니다."
+    },
+    {
+      "type": "text",
+      "id": "step2_image_alt",
+      "label": "Step 2 이미지 alt 텍스트",
+      "default": "STEP 2 · 인쇄 버튼 클릭"
+    },
+    {
+      "type": "text",
+      "id": "step3_number",
+      "label": "Step 3 번호 (콘텐츠)",
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "step3_kicker",
+      "label": "Step 3 부제목",
+      "default": "STEP 03"
+    },
+    {
+      "type": "text",
+      "id": "step3_title",
+      "label": "Step 3 제목",
+      "default": "PDF로 저장한 뒤 용지 크기를 A0로 변경해 주세요"
+    },
+    {
+      "type": "textarea",
+      "id": "step3_description",
+      "label": "Step 3 설명",
+      "default": "인쇄창 오른쪽의 대상 항목에서 실제 프린터가 아닌 PDF로 저장을 선택합니다.\n설정 더보기를 클릭한 뒤 용지 크기를 A0로 변경하고 저장해 주세요."
+    },
+    {
+      "type": "textarea",
+      "id": "step3_info",
+      "label": "Step 3 안내 문구",
+      "default": "저장 전 미리보기에서 주문내역 전체가 보이는지 확인해 주세요."
+    },
+    {
+      "type": "text",
+      "id": "step3_image_alt",
+      "label": "Step 3 이미지 alt 텍스트",
+      "default": "크롬 인쇄창에서 PDF로 저장을 선택하고 용지 크기를 A0로 변경하는 화면"
+    },
+    {
+      "type": "text",
+      "id": "step4_number",
+      "label": "Step 4 번호 (콘텐츠)",
+      "default": "4"
+    },
+    {
+      "type": "text",
+      "id": "step4_kicker",
+      "label": "Step 4 부제목",
+      "default": "STEP 04"
+    },
+    {
+      "type": "text",
+      "id": "step4_title",
+      "label": "Step 4 제목",
+      "default": "아보카드 수입대행 신청서를 제출해 주세요"
+    },
+    {
+      "type": "textarea",
+      "id": "step4_description",
+      "label": "Step 4 설명",
+      "default": "아보카드 홈페이지에서 수입대행 신청 버튼을 눌러 주세요.\n신청서를 작성하고 저장한 PDF를 첨부한 뒤 제출하면 완료됩니다."
+    },
+    {
+      "type": "url",
+      "id": "step4_apply_url",
+      "label": "Step 4 신청 링크 (예: /pages/order-inquiry)"
+    },
+    {
+      "type": "text",
+      "id": "step4_apply_label",
+      "label": "Step 4 신청 버튼 레이블",
+      "default": "수입대행 신청하기"
+    },
+    {
+      "type": "text",
+      "id": "zoom_label",
+      "label": "이미지 줌 라벨",
+      "default": "클릭하여 크게 보기"
+    },
+    {
+      "type": "text",
+      "id": "lightbox_title",
+      "label": "라이트박스 제목",
+      "default": "가이드 이미지"
+    },
+    {
+      "type": "text",
+      "id": "lightbox_prev_label",
+      "label": "라이트박스 이전 버튼 aria-label",
+      "default": "이전 이미지"
+    },
+    {
+      "type": "text",
+      "id": "lightbox_next_label",
+      "label": "라이트박스 다음 버튼 aria-label",
+      "default": "다음 이미지"
+    },
+    {
+      "type": "text",
+      "id": "lightbox_close_label",
+      "label": "라이트박스 닫기 버튼 aria-label",
+      "default": "닫기"
+    },
+    {
+      "type": "text",
+      "id": "toast_message",
+      "label": "주소 복사 토스트 메시지",
+      "default": "주소가 복사되었습니다."
+    }
+  ]
+}
+{% endschema %}

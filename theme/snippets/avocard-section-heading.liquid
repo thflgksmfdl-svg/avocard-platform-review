@@ -1,0 +1,14 @@
+<div class="avocard-section-heading{% if align == 'center' %} avocard-section-heading--center{% endif %}">
+  {%- if eyebrow != blank -%}
+    <p class="avocard-eyebrow">{{ eyebrow | escape }}</p>
+  {%- endif -%}
+  {%- if heading != blank -%}
+    <h2 class="avocard-heading avocard-heading--section">
+      <span class="avocard-heading__bar" aria-hidden="true"></span>
+      {{ heading | escape }}
+    </h2>
+  {%- endif -%}
+  {%- if text != blank -%}
+    <div class="avocard-subtext">{{ text }}</div>
+  {%- endif -%}
+</div>

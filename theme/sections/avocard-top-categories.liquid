@@ -1,0 +1,450 @@
+<section class="avocard avocard-topbar{% if section.settings.sticky_on_scroll %} avocard-topbar--sticky{% endif %}{% if section.settings.transparent_over_hero %} avocard-topbar--transparent{% endif %}">
+  <div class="avocard-page avocard-topbar__inner">
+    <a class="avocard-topbar__brand" href="{{ routes.root_url }}" aria-label="{{ section.settings.logo_text | escape }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 240 }}"
+          alt="{{ section.settings.logo.alt | default: section.settings.logo_text | escape }}"
+          width="{{ section.settings.logo.width }}"
+          height="{{ section.settings.logo.height }}"
+          loading="eager"
+        >
+      {%- else -%}
+        <img
+          src="{{ 'avocard-logo-main.png' | asset_url }}"
+          alt="{{ section.settings.logo_text | escape }}"
+          width="168"
+          height="42"
+          loading="eager"
+          class="avocard-topbar__brand-fallback"
+        >
+      {%- endif -%}
+    </a>
+
+    <nav class="avocard-topbar__nav" aria-label="아보카드 주요 메뉴">
+      <div class="avocard-topbar__group">
+        <button type="button" class="avocard-topbar__trigger" aria-expanded="false">
+          {{ section.settings.about_label | escape }}
+          <span class="avocard-topbar__caret" aria-hidden="true"></span>
+        </button>
+        <div class="avocard-topbar__dropdown">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.group == 'about' -%}
+              <a
+                {{ block.shopify_attributes }}
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="avocard-topbar__group avocard-topbar__group--primary">
+        <button type="button" class="avocard-topbar__trigger" aria-expanded="false">
+          {{ section.settings.order_label | escape }}
+          <span class="avocard-topbar__caret" aria-hidden="true"></span>
+        </button>
+        <div class="avocard-topbar__dropdown">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.group == 'order' -%}
+              <a
+                {{ block.shopify_attributes }}
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="avocard-topbar__group">
+        <button type="button" class="avocard-topbar__trigger" aria-expanded="false">
+          {{ section.settings.support_label | escape }}
+          <span class="avocard-topbar__caret" aria-hidden="true"></span>
+        </button>
+        <div class="avocard-topbar__dropdown">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.group == 'support' -%}
+              <a
+                {{ block.shopify_attributes }}
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </nav>
+
+    <div class="avocard-topbar__ctas">
+      {%- if section.settings.support_cta_label != blank -%}
+        {%- if customer -%}
+          <a class="avocard-topbar__cta avocard-topbar__cta--ghost" href="https://avocard.co.kr/account">
+            마이페이지
+          </a>
+        {%- else -%}
+          <a
+            class="avocard-topbar__cta avocard-topbar__cta--ghost"
+            {% if section.settings.support_cta_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section.settings.support_cta_link }}"
+            {% endif %}
+          >
+            {{ section.settings.support_cta_label | escape }}
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a
+          class="avocard-topbar__cta"
+          {% if section.settings.cta_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.cta_link }}"
+          {% endif %}
+        >
+          {{ section.settings.cta_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <button type="button" class="avocard-topbar__hamburger" aria-expanded="false" aria-controls="avocard-mobile-menu-{{ section.id }}" aria-label="메뉴 열기">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="avocard-mobile-menu" id="avocard-mobile-menu-{{ section.id }}" hidden>
+    <div class="avocard-mobile-menu__header">
+      <a class="avocard-mobile-menu__logo" href="{{ routes.root_url }}" aria-label="{{ section.settings.logo_text | escape }}">
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 180 }}"
+            alt="{{ section.settings.logo.alt | default: section.settings.logo_text | escape }}"
+            width="140"
+            height="35"
+            loading="eager"
+          >
+        {%- else -%}
+          <img
+            src="{{ 'avocard-logo-main.png' | asset_url }}"
+            alt="{{ section.settings.logo_text | escape }}"
+            width="140"
+            height="35"
+            loading="eager"
+          >
+        {%- endif -%}
+      </a>
+      <button type="button" class="avocard-mobile-menu__close" aria-label="메뉴 닫기">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="avocard-mobile-menu__nav" aria-label="아보카드 모바일 메뉴">
+      <div class="avocard-mobile-menu__group">
+        <button type="button" class="avocard-mobile-menu__trigger" aria-expanded="false">
+          <span class="avocard-mobile-menu__trigger-label">
+            <span class="avocard-mobile-menu__trigger-accent">ABOUT</span>
+            <span>아보카드</span>
+          </span>
+          <span class="avocard-topbar__caret" aria-hidden="true"></span>
+        </button>
+        <div class="avocard-mobile-menu__panel">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.group == 'about' -%}
+              <a
+                {{ block.shopify_attributes }}
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="avocard-mobile-menu__group avocard-mobile-menu__group--direct">
+        {%- assign order_link = false -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.group == 'order' -%}
+            {%- assign order_link = block.settings.link -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <a
+          class="avocard-mobile-menu__trigger avocard-mobile-menu__trigger--link"
+          {% if order_link == false %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ order_link }}"
+          {% endif %}
+        >
+          <span class="avocard-mobile-menu__trigger-label">
+            <span class="avocard-mobile-menu__trigger-accent">수입대행</span>
+            <span>신청/조회</span>
+          </span>
+          <span class="avocard-mobile-menu__arrow" aria-hidden="true">›</span>
+        </a>
+      </div>
+
+      <div class="avocard-mobile-menu__group">
+        <button type="button" class="avocard-mobile-menu__trigger" aria-expanded="false">
+          <span class="avocard-mobile-menu__trigger-label">
+            {{ section.settings.support_label | escape }}
+          </span>
+          <span class="avocard-topbar__caret" aria-hidden="true"></span>
+        </button>
+        <div class="avocard-mobile-menu__panel">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.group == 'support' -%}
+              <a
+                {{ block.shopify_attributes }}
+                {% if block.settings.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="avocard-mobile-menu__group avocard-mobile-menu__group--direct">
+        {%- if customer -%}
+          <a class="avocard-mobile-menu__trigger avocard-mobile-menu__trigger--link" href="https://avocard.co.kr/account">
+            <span class="avocard-mobile-menu__trigger-label">
+              <span class="avocard-mobile-menu__trigger-accent">마이</span>
+              <span>페이지</span>
+            </span>
+            <span class="avocard-mobile-menu__arrow" aria-hidden="true">›</span>
+          </a>
+        {%- else -%}
+          <a class="avocard-mobile-menu__trigger avocard-mobile-menu__trigger--link" href="{{ section.settings.support_cta_link }}">
+            <span class="avocard-mobile-menu__trigger-label">
+              <span class="avocard-mobile-menu__trigger-accent">로그인/</span>
+              <span>회원가입</span>
+            </span>
+            <span class="avocard-mobile-menu__arrow" aria-hidden="true">›</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </nav>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard top categories",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Avocard"
+    },
+    {
+      "type": "text",
+      "id": "about_label",
+      "label": "About label",
+      "default": "ABOUT 아보카드"
+    },
+    {
+      "type": "text",
+      "id": "order_label",
+      "label": "Order label",
+      "default": "수입대행 신청/조회"
+    },
+    {
+      "type": "text",
+      "id": "support_label",
+      "label": "Support label",
+      "default": "고객센터"
+    },
+    {
+      "type": "text",
+      "id": "support_cta_label",
+      "label": "Secondary CTA label",
+      "default": "카카오톡 문의"
+    },
+    {
+      "type": "url",
+      "id": "support_cta_link",
+      "label": "Secondary CTA link"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "수입대행 신청"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_on_scroll",
+      "label": "Keep category bar sticky",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_over_hero",
+      "label": "Transparent over hero, solid on scroll",
+      "info": "Requires the hero section to be placed directly below and to have a colored background.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Category link",
+      "settings": [
+        {
+          "type": "select",
+          "id": "group",
+          "label": "Group",
+          "options": [
+            {
+              "value": "about",
+              "label": "ABOUT 아보카드"
+            },
+            {
+              "value": "order",
+              "label": "수입대행 신청/조회"
+            },
+            {
+              "value": "support",
+              "label": "고객센터"
+            }
+          ],
+          "default": "about"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "이용가이드"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard top categories",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "아보카드 소개"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "이용가이드"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "운영약관"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "배송요금표"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "로켓그로스 예상비용"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "order",
+            "label": "수입대행 신청"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "order",
+            "label": "진행상황 조회"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "support",
+            "label": "FAQ"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "support",
+            "label": "카카오톡 문의"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "group": "support",
+            "label": "필수카드"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

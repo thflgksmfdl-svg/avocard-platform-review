@@ -1,0 +1,17 @@
+/*
+ * Avocard Usage Guide Template
+ *
+ * This template is used for the Avocard Usage Guide page.
+ * Assign this template to the 아보카드-이용가이드 page in Shopify admin.
+ */
+{
+  "sections": {
+    "main": {
+      "type": "avocard-guide",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

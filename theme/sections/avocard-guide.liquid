@@ -1,0 +1,327 @@
+{{ 'avocard-guide.css' | asset_url | stylesheet_tag }}
+<div id="avocard-usage-guide">
+<main>
+<section class="hero">
+ <div class="container">
+  <span class="hero-badge">수입대행 신청 방법</span>
+  <h1>아보카드 <span>이용가이드</span></h1>
+  <p>1688 주문내역을 PDF로 저장한 뒤<br>아보카드 수입대행 신청서에 첨부하는 방법입니다.</p>
+ </div>
+</section>
+
+<div class="nav-wrap">
+ <div class="container">
+  <nav class="guide-nav" aria-label="이용가이드 단계 이동">
+   <a href="#step-1"><span class="nav-number">01</span>1688에서 주문 확인</a>
+   <a href="#step-2"><span class="nav-number">02</span>1688 총 금액 확인</a>
+   <a href="#step-3"><span class="nav-number">03</span>PDF로 저장</a>
+   <a href="#step-4"><span class="nav-number">04</span>신청서 제출</a>
+  </nav>
+ </div>
+</div>
+
+<section class="main">
+<div class="container">
+ <div class="browser-note">※ 본 가이드는 <strong>PC 크롬 브라우저</strong>를 기준으로 제작되었습니다.</div>
+ <div class="steps">
+
+  <section class="step" id="step-1">
+   <header class="step-header">
+    <span class="step-number">01</span>
+    <div><span class="step-kicker">STEP 01</span><h2 class="step-title">주문할 상품을 선택해 주세요</h2></div>
+   </header>
+   <div class="step-content">
+    <div class="step-copy">
+     <p>셀러님 아이디로 1688에 접속하여<br>구매 하고자 하는 상품을 내 장바구니(采购车)에 추가해 주세요.</p>
+     <p>견적 의뢰할 상품만 선택한 뒤<br>오른쪽의 주황색 결제 버튼(结算)을 클릭합니다.</p>
+     <div class="callout">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.7 2.8 17a2 2 0 0 0 1.74 3h14.92a2 2 0 0 0 1.74-3L13.7 3.7a2 2 0 0 0-3.4 0Z"></path></svg>
+      중국어 인 상태에서 진행해주세요.
+     </div>
+    </div>
+    <button class="guide-image" type="button" data-title="STEP 1 · 1688에서 주문 확인">
+     <img data-image-key="step1" alt="견적 의뢰할 상품을 선택하고 결제 버튼을 클릭하는 화면">
+     <span class="zoom-label"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16.5 16.5 4 4M11 8v6M8 11h6"></path></svg>클릭하여 크게 보기</span>
+    </button>
+   </div>
+  </section>
+
+  <section class="step" id="address-guide">
+   <header class="step-header">
+    <span class="step-number tip">TIP</span>
+    <div><span class="step-kicker">ADDRESS GUIDE</span><h2 class="step-title">배송지 설정이 필요하다면 아보카드 주소를 사용해 주세요</h2></div>
+   </header>
+   <div class="step-content">
+<details class="address-card">
+  <summary class="accordion-toggle">
+    <span>아보카드 중국 창고 주소 보기</span>
+
+    <svg
+      class="accordion-icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </summary>
+
+  <div class="accordion-panel">
+    <p class="address-instruction">
+      1688 주소지 설정 창의 맨 상단 입력칸에 아래 주소를 붙여 넣고<br>
+      <strong>
+  <span class="zh-cn" lang="zh-CN">自动填写</span>
+  (자동입력)
+</strong>버튼을 눌러 주세요.
+    </p>
+
+<button
+  class="copy-address zh-cn"
+  id="copyAddress"
+  type="button"
+  lang="zh-CN"
+  data-copy="山东省 威海市 环翠区 凤林街道 国泰路-107-3号凯佰通公司(3942) / 付先生(3942) / 18563141070 / 264200"
+>
+  山东省 威海市 环翠区 凤林街道 国泰路-107-3号凯佰通公司(3942)
+  / 付先生(3942) / 18563141070 / 264200
+</button>
+
+    <p class="copy-help">주소를 클릭하면 복사됩니다.</p>
+
+    <button
+      class="guide-image address-image"
+      type="button"
+      data-title="아보카드 주소지 자동입력 방법"
+    >
+      <img
+        src="https://cdn.shopify.com/s/files/1/0622/3357/5595/files/adress.png?v=1785898492"
+        alt="아보카드 주소를 붙여 넣고 자동입력 버튼을 누르는 화면"
+        loading="lazy"
+      >
+
+      <span class="zoom-label">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m16.5 16.5 4 4M11 8v6M8 11h6"></path>
+        </svg>
+        클릭하여 크게 보기
+      </span>
+    </button>
+  </div>
+</details>
+   </div>
+  </section>
+
+  <section class="step" id="step-2">
+   <header class="step-header">
+    <span class="step-number">02</span>
+    <div><span class="step-kicker">STEP 02</span><h2 class="step-title">최종 결제금액을 확인해 주세요</h2></div>
+   </header>
+   <div class="step-content">
+    <div class="step-copy"><p>중국 내륙 배송비가 포함된 <strong>최종 결제금액</strong>을 확인해 주세요.<br>화면에서 마우스 오른쪽 버튼을 누른 뒤 <strong>인쇄</strong>를 클릭합니다.</p></div>
+    <button class="guide-image" type="button" data-title="STEP 2 · 1688 총 금액 확인 및 인쇄">
+     <img data-image-key="step2" alt="최종 결제금액을 확인하고 인쇄를 클릭하는 화면">
+     <span class="zoom-label"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16.5 16.5 4 4M11 8v6M8 11h6"></path></svg>클릭하여 크게 보기</span>
+    </button>
+   </div>
+  </section>
+
+  <section class="step" id="step-3">
+   <header class="step-header">
+    <span class="step-number">03</span>
+    <div><span class="step-kicker">STEP 03</span><h2 class="step-title">PDF로 저장해 주세요</h2></div>
+   </header>
+   <div class="step-content">
+    <div class="step-copy">
+     <p>인쇄창 오른쪽의 대상 항목에서<br>실제 프린터가 아닌 <strong>PDF로 저장</strong>을 선택합니다.</p>
+     <p><strong>설정 더보기</strong>를 클릭한 뒤<br>용지 크기를 <strong>A0</strong>로 변경하고 저장해 주세요.</p>
+     <div class="callout"><svg viewBox="0 0 24 24"><path d="M20 7 9 18l-5-5"></path></svg>저장 전 미리보기에서 주문내역 전체가 보이는지 확인해 주세요.</div>
+    </div>
+    <div class="step3-image-grid">
+
+     <button
+      class="guide-image"
+      type="button"
+      data-title="STEP 3 · PDF로 저장 선택"
+     >
+      <img
+       data-image-key="step3Pdf"
+       alt="크롬 인쇄창에서 PDF로 저장을 선택하는 화면"
+      >
+      <span class="zoom-label">
+       <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m16.5 16.5 4 4M11 8v6M8 11h6"></path>
+       </svg>
+       클릭하여 크게 보기
+      </span>
+     </button>
+
+     <button
+      class="guide-image"
+      type="button"
+      data-title="STEP 3 · A0 용지 설정"
+     >
+      <img
+       data-image-key="step3A0"
+       alt="크롬 인쇄 설정에서 용지 크기를 A0로 변경하는 화면"
+      >
+      <span class="zoom-label">
+       <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m16.5 16.5 4 4M11 8v6M8 11h6"></path>
+       </svg>
+       클릭하여 크게 보기
+      </span>
+     </button>
+
+    </div>
+   </div>
+  </section>
+
+  <section class="step" id="step-4">
+   <header class="step-header">
+    <span class="step-number">04</span>
+    <div><span class="step-kicker">STEP 04</span><h2 class="step-title">아보카드 수입대행 신청서를 제출해 주세요</h2></div>
+   </header>
+   <div class="step-content">
+    <div class="step-copy"><p>아보카드 홈페이지에서 <strong>수입대행 신청</strong> 버튼을 눌러 주세요.<br>신청서를 작성하고 저장한 PDF를 첨부한 뒤 제출하면 완료됩니다.</p></div>
+    <div class="apply-area">
+     <a class="apply-button" href="https://www.jungpan.com/Front/Avocard/Avocard_W.asp">
+      수입대행 신청하기
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"></path></svg>
+     </a>
+    </div>
+   </div>
+  </section>
+
+ </div>
+</div>
+</section>
+</main>
+
+<div class="copy-toast" id="copyToast">주소가 복사되었습니다.</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+ <div class="lightbox-dialog">
+  <div class="lightbox-header">
+   <span class="lightbox-title" id="lightboxTitle">가이드 이미지</span>
+   <div class="lightbox-controls">
+    <button class="lightbox-control" id="prevButton" type="button" aria-label="이전 이미지"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+    <button class="lightbox-control" id="nextButton" type="button" aria-label="다음 이미지"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></button>
+    <button class="lightbox-control" id="closeButton" type="button" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+   </div>
+  </div>
+  <div class="lightbox-stage" id="lightboxStage"></div>
+ </div>
+</div>
+
+<script>
+(() => {
+
+  /*
+   ============================================================
+   이미지 링크 입력 영역
+   아래 따옴표 안에 이미지 URL을 그대로 붙여 넣으세요.
+   예시:
+   step1: "https://example.com/step1.png"
+   ============================================================
+  */
+  const IMAGE_URLS = {
+    step1: "{{ 'usage-guide-step-1.webp' | asset_url }}",
+    step2: "{{ 'usage-guide-step-2.webp' | asset_url }}",
+    step3Pdf: "{{ 'usage-guide-step-3-pdf.webp' | asset_url }}",
+    step3A0: "{{ 'usage-guide-step-3-a0.webp' | asset_url }}"
+  };
+
+
+
+  const imageElements = [...document.querySelectorAll("img[data-image-key]")];
+
+  imageElements.forEach((image) => {
+    const key = image.dataset.imageKey;
+    const url = IMAGE_URLS[key];
+
+    if (url && !url.includes("_이미지_링크를_여기에_입력")) {
+      image.src = url;
+    } else {
+      image.style.display = "none";
+
+      const placeholder = document.createElement("div");
+      placeholder.className = "image-placeholder";
+      placeholder.textContent = "이 이미지 영역의 링크를 코드 상단 IMAGE_URLS에서 입력해 주세요.";
+
+      image.parentElement.insertBefore(placeholder, image);
+    }
+  });
+
+ const imageButtons=[...document.querySelectorAll(".guide-image")].filter((button)=>{
+  const image=button.querySelector("img");
+  return image && image.style.display!=="none" && image.src;
+ });
+ const lightbox=document.getElementById("lightbox");
+ const stage=document.getElementById("lightboxStage");
+ const title=document.getElementById("lightboxTitle");
+ const closeButton=document.getElementById("closeButton");
+ const prevButton=document.getElementById("prevButton");
+ const nextButton=document.getElementById("nextButton");
+ const addressToggle=document.getElementById("addressToggle");
+ const addressPanel=document.getElementById("addressPanel");
+ const copyAddress=document.getElementById("copyAddress");
+ const copyToast=document.getElementById("copyToast");
+ let index=0,lastFocus=null,timer=null;
+
+ function render(i){
+  const btn=imageButtons[i],src=btn.querySelector("img"),img=document.createElement("img");
+  title.textContent=btn.dataset.title||"가이드 이미지";stage.innerHTML="";
+  img.src=src.currentSrc||src.src;img.alt=src.alt;stage.appendChild(img);
+ }
+ function open(i){index=i;lastFocus=document.activeElement;render(index);lightbox.classList.add("is-open");lightbox.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");closeButton.focus()}
+ function close(){lightbox.classList.remove("is-open");lightbox.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");if(lastFocus)lastFocus.focus()}
+ function prev(){index=(index-1+imageButtons.length)%imageButtons.length;render(index)}
+ function next(){index=(index+1)%imageButtons.length;render(index)}
+ function toast(msg){copyToast.textContent=msg;copyToast.classList.add("show");clearTimeout(timer);timer=setTimeout(()=>copyToast.classList.remove("show"),1800)}
+
+ imageButtons.forEach((button,index)=>{
+  button.addEventListener("click",()=>{
+   const image=button.querySelector("img");
+   if(!image || !image.src || image.style.display==="none") return;
+   open(index);
+  });
+ });
+ closeButton.addEventListener("click",close);prevButton.addEventListener("click",prev);nextButton.addEventListener("click",next);
+ lightbox.addEventListener("click",e=>{if(e.target===lightbox)close()});
+ document.addEventListener("keydown",e=>{if(!lightbox.classList.contains("is-open"))return;if(e.key==="Escape")close();if(e.key==="ArrowLeft")prev();if(e.key==="ArrowRight")next()});
+
+ addressToggle.addEventListener("click",()=>{
+  const expanded=addressToggle.getAttribute("aria-expanded")==="true";
+  addressToggle.setAttribute("aria-expanded",String(!expanded));
+  addressPanel.classList.toggle("open",!expanded);
+ });
+
+ copyAddress.addEventListener("click",async()=>{
+  const value=copyAddress.dataset.copy;
+  try{await navigator.clipboard.writeText(value);toast("주소가 복사되었습니다.")}
+  catch{
+   const t=document.createElement("textarea");t.value=value;t.style.position="fixed";t.style.opacity="0";
+   document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();toast("주소가 복사되었습니다.");
+  }
+ });
+})();
+</script>
+
+<script src="{{ 'avocard-guide.js' | asset_url }}" defer></script>
+{% schema %}
+{
+  "name": "아보카드 이용가이드",
+  "settings": [],
+  "presets": [
+    {
+      "name": "아보카드 이용가이드"
+    }
+  ]
+}
+{% endschema %}
+
+</div>
+
+<script src="{{ 'avocard-guide.js' | asset_url }}" defer></script>

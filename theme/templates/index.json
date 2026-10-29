@@ -1,0 +1,439 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "avocard_hero": {
+      "type": "avocard-hero",
+      "settings": {
+        "heading_line_1_brand": "1688",
+        "heading_line_1_rest": "에서 담고,",
+        "heading_line_2_brand": "아보카드",
+        "heading_line_2_rest": "에 맡기면",
+        "heading_line_3": "국내 배송부터",
+        "heading_line_4": "로켓그로스 입고까지",
+        "subheading": "1688 주문부터 검수·포장·통관·3PL 보관·로켓그로스 입고까지, 한 번에.",
+        "primary_label": "수입대행 신청하기",
+        "primary_link": "https://www.jungpan.com/front/avocard/index.asp",
+        "secondary_label": "카카오톡 문의하기",
+        "secondary_link": "http://pf.kakao.com/_xjppQb/chat",
+        "metric_1_value": "6%",
+        "metric_1_label": "구매대행 수수료 + 실시간 환율 적용",
+        "padding_top": 120,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_images": {
+      "type": "avocard-image-showcase",
+      "settings": {
+        "badge": "셀러가 선택한 아보카드",
+        "heading": "다시 찾고, 오래 함께하는 수입대행",
+        "sub_text": "한 번의 이용이 재구매로, 재구매가 오랜 파트너십으로 이어집니다.",
+        "stat_1_value": "93",
+        "stat_1_suffix": "%",
+        "stat_1_label": "재구매율",
+        "stat_2_value": "5",
+        "stat_2_suffix": "년+",
+        "stat_2_label": "VIP 셀러 장기 이용",
+        "padding_top": 104,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_why": {
+      "type": "avocard-why-tabs",
+      "blocks": {
+        "benefit_card": {
+          "type": "benefit",
+          "settings": {
+            "tone": "green",
+            "icon": "file-text",
+            "title": "간편 견적",
+            "text": "1688 장바구니 PDF 파일로 초간단 견적 요청 가능"
+          }
+        },
+        "benefit_customs": {
+          "type": "benefit",
+          "settings": {
+            "tone": "blue",
+            "icon": "credit-card",
+            "title": "TT송금 & 카드결제 모두 지원",
+            "text": "원하는 결제 방식으로 간편하게"
+          }
+        },
+        "benefit_documents": {
+          "type": "benefit",
+          "settings": {
+            "tone": "purple",
+            "icon": "shield",
+            "title": "개인·사업자 통관 모두 진행",
+            "text": "상품과 주문 목적에 맞는 통관 방식으로 안내"
+          }
+        },
+        "benefit_3pl": {
+          "type": "benefit",
+          "settings": {
+            "tone": "orange",
+            "icon": "file-text",
+            "title": "수입 증빙 자료 완비",
+            "text": "인보이스, 송금전표, 수입신고필증, 수입세금계산서 모두 OK"
+          }
+        },
+        "benefit_rocket": {
+          "type": "benefit",
+          "settings": {
+            "tone": "red",
+            "icon": "warehouse",
+            "title": "국내 3PL 보관",
+            "text": "아보카드 3PL 창고에 보관 및 로켓그로스 입고 지원"
+          }
+        },
+        "benefit_1688": {
+          "type": "benefit",
+          "settings": {
+            "tone": "green",
+            "icon": "truck",
+            "title": "로켓그로스 입고",
+            "text": "쿠팡 로켓그로스 입고 기준에 맞는 택배·파렛트·트럭 모두 지원"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_card",
+        "benefit_customs",
+        "benefit_documents",
+        "benefit_3pl",
+        "benefit_rocket",
+        "benefit_1688"
+      ],
+      "settings": {
+        "eyebrow": "왜 아보카드인가",
+        "heading": "셀러가 직접 할 필요 없는 일, 아보카드가 합니다",
+        "text": "<p>1688 수입부터 국내 입고까지, 번거로운 과정을 대신 처리해드립니다.</p>",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_fee": {
+      "type": "avocard-fee-comparison",
+      "settings": {
+        "eyebrow": "수수료 안내",
+        "heading": "투명한 수수료, 숨겨진 비용 ZERO",
+        "text": "<p>결제 방식에 따라 수수료가 달라집니다.</p>",
+        "transfer_label": "TT 송금",
+        "transfer_total": "6%",
+        "transfer_breakdown": "구매대행 수수료 6%",
+        "card_label": "카드 결제",
+        "card_total": "10%",
+        "card_breakdown": "구매대행 수수료 6% + 해외승인 카드 수수료 4%",
+        "transfer_point_1": "구매대행 수수료 세금계산서 발행",
+        "transfer_point_2": "KRW 원화 송금 (계좌 이체)",
+        "transfer_point_3": "대량 주문 시 유리",
+        "card_point_1": "유일한 해외 승인 카드 결제",
+        "card_point_2": "소량 주문 시 유리",
+        "transfer_note": "아보카드는 해외 법인 G9NOW HK LIMITED가 운영하는 플랫폼으로, 송금 금액은 해외 법인이 수취합니다. 따라서 해외송금으로 처리되며, 100% 매입 증빙이 가능합니다.",
+        "card_note": "카드결제는 해외 승인으로 처리되어 100% 매입 증빙이 가능합니다. 단, 카드사에 따라 해외결제 추가 수수료가 발생할 수 있습니다.",
+        "detail_label": "자세한 내용 확인하기",
+        "detail_link": "https://avocard.co.kr/pages/아보카드-결제방식",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_import": {
+      "type": "avocard-import-service",
+      "blocks": {
+        "import_quote": {
+          "type": "step",
+          "settings": {
+            "icon": "file-text",
+            "order_label": "STEP 01",
+            "payment_badge": "견적 확인",
+            "title": "견적 신청",
+            "text": "가이드를 참고해 견적서를 작성해 주시면, \n담당자가 확인 후 견적을 드리고 있습니다."
+          }
+        },
+        "import_payment": {
+          "type": "step",
+          "settings": {
+            "icon": "credit-card",
+            "order_label": "STEP 02",
+            "payment_badge": "1차 결제",
+            "title": "물품대금·수수료 결제",
+            "text": "견적서를 확인 후 물품 대금 및 \n구매대행 수수료를 결제합니다. \n결제 확인 후 중국 판매자에게 \n발주가 진행됩니다."
+          }
+        },
+        "import_pack": {
+          "type": "step",
+          "settings": {
+            "icon": "warehouse",
+            "order_label": "STEP 03",
+            "payment_badge": "중국 창고",
+            "title": "입고·검수·작업",
+            "text": "상품 입고 후 검수·포장·바코드 \n부착 등 요청 작업을 진행하고 \n최종 무게를 측정합니다."
+          }
+        },
+        "import_shipping": {
+          "type": "step",
+          "settings": {
+            "icon": "truck",
+            "order_label": "STEP 04",
+            "payment_badge": "2차 결제",
+            "title": "국제운임 결제·출고",
+            "text": "실측 무게 or CBM 중 \n더 저렴한 방식으로 계산 후 \n안내드리고 있습니다."
+          }
+        },
+        "import_arrival": {
+          "type": "step",
+          "settings": {
+            "icon": "package",
+            "order_label": "STEP 05",
+            "payment_badge": "3차 결제",
+            "title": "국제배송·통관",
+            "text": "개인통관 또는 사업자 통관 \n방식에 맞춰 진행되며, \n사업자 통관 시 관부가세 등 비용은 \n관세사 측에 직접 납부해 주시면 됩니다."
+          }
+        },
+        "import_lookup": {
+          "type": "step",
+          "settings": {
+            "icon": "zap",
+            "order_label": "STEP 06",
+            "payment_badge": "국내 도착",
+            "title": "국내 배송·입고",
+            "text": "희망 주소지 배송부터 \n국내 3PL 보관, \n로켓그로스 입고까지 모두 지원합니다."
+          }
+        }
+      },
+      "block_order": [
+        "import_quote",
+        "import_payment",
+        "import_pack",
+        "import_shipping",
+        "import_arrival",
+        "import_lookup"
+      ],
+      "settings": {
+        "eyebrow": "1688 수입대행",
+        "heading": "견적 신청부터 국내 입고까지, 6단계로 안내드립니다",
+        "text": "<p>복잡한 수입 과정을 아보카드가 단계별로 처리합니다.</p>",
+        "status_title": "아보카드 전용 주문페이지에서 진행 상황을 실시간으로 확인하세요",
+        "status_text": "주문, 중국 입고, 검수, 작업, 출고, 통관, 국내 배송까지 현재 단계를 한눈에 확인할 수 있습니다.",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_documents": {
+      "type": "avocard-documents",
+      "blocks": {
+        "doc_quote": {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><path d=\"M14 2v6h6\"/><path d=\"M8 13h8M8 17h5\"/></svg>",
+            "title": "견적서",
+            "text": "판매단가와 거래 조건을 확인할 수 있는 기본 견적 자료입니다.",
+            "sub_1": "견적 확인 후 제공",
+            "sub_2": "품목·수량·단가 및 요청 사항 확인"
+          }
+        },
+        "doc_transfer": {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10h18\"/><path d=\"M5 10V7l7-4 7 4v3\"/><path d=\"M5 10v8M9 10v8M15 10v8M19 10v8\"/><path d=\"M3 18h18M2 21h20\"/></svg>",
+            "title": "인보이스 및 송금전문",
+            "text": "해외 법인이 수취한 거래 금액과 송금 내역을 확인할 수 있는 지급 증빙 자료입니다.",
+            "sub_1": "송금 결제 시 제공",
+            "sub_2": "카드결제 시 카드 이용내역으로 대체"
+          }
+        },
+        "doc_import": {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2h9l3 3v17H6z\"/><path d=\"M14 2v4h4\"/><path d=\"M9 11h6M9 15h4\"/><path d=\"m14.5 18 1.4 1.4L19 16.3\"/></svg>",
+            "title": "수입신고필증",
+            "text": "세관에 정식으로 신고된 수입 내역을 확인하는 공식 통관 자료입니다.",
+            "sub_1": "신고 품명·수량·금액 확인",
+            "sub_2": "정식 수입 여부 확인에 활용"
+          }
+        },
+        "doc_tax": {
+          "type": "document",
+          "settings": {
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2z\"/><path d=\"M9 8h6M9 12h6M9 16h3\"/></svg>",
+            "title": "수입세금계산서",
+            "text": "수입 부가세와 관련된 세무·회계 처리에 활용할 수 있는 증빙 자료입니다.",
+            "sub_1": "수입 부가세 확인",
+            "sub_2": "사업자 회계 처리 자료로 활용"
+          }
+        }
+      },
+      "block_order": [
+        "doc_quote",
+        "doc_transfer",
+        "doc_import",
+        "doc_tax"
+      ],
+      "settings": {
+        "eyebrow": "수입 증빙",
+        "heading": "세관신고부터 세무회계까지, 증빙은 완벽하게",
+        "section_description": "<p>정상적인 수입 거래에 필요한 증빙 자료를 요청 기준에 맞춰 안내드립니다.</p>",
+        "risk_title": "70% 이상의 셀러가 잘못된 방법으로 수입한다는 사실, 알고 계셨나요?",
+        "risk_text": "잘못된 방법으로 수입 시 최대 5배까지의 과태료와 매입 취소 위험이 있습니다.",
+        "video_title": "아보카드로 매입 증빙과 수입 증빙까지 체계적으로 준비하세요.",
+        "video_text": "자세한 내용은 유튜브 영상을 참고해주세요.",
+        "video_link": "https://www.youtube.com/watch?v=lOBh6iWaAVA&t=96s",
+        "video_label": "유튜브에서 보기",
+        "video_thumbnail": "https://img.youtube.com/vi/lOBh6iWaAVA/hqdefault.jpg",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_faq": {
+      "type": "avocard-faq-preview",
+      "blocks": {
+        "faq_personal": {
+          "type": "question",
+          "settings": {
+            "question": "수입대행은 개인과 사업자 모두 이용할 수 있나요?",
+            "answer": "<p><strong>네, 아보카드 수입대행 서비스는 개인과 사업자 모두 이용할 수 있습니다.</strong></p><p>개인의 경우 자가사용 범위를 초과하는 수량이거나, 인증 또는 수입요건 확인이 필요한 품목은 개인통관으로 진행하기 어려울 수 있습니다.</p><p><strong>진행 가능 여부가 확실하지 않다면 먼저 견적서를 제출한 뒤, 고객센터로 정상 출고 가능 여부를 문의해 주세요.</strong></p><p>확인 후 통관 요건을 준수하는 범위에서 품목별로 적절한 진행 방향을 안내드립니다.</p><p>사업자의 경우 KC 인증, 식품검역, 전기용품 인증 등 수입요건이 있는 품목은 관련 인증자료가 준비되어 있어야 합니다.</p><p>인증 여부가 불확실한 경우 고객센터로 문의해 주세요.</p>"
+          }
+        },
+        "faq_rate": {
+          "type": "question",
+          "settings": {
+            "question": "아보카드 이용 시 적용 환율은 어떤 기준인가요?",
+            "answer": "<p>카드결제 시에는 네이버 중국 환율의 <strong>‘송금 보낼 때’</strong> 환율을 기준으로 적용합니다.</p><p>해당 환율은 일반적으로 ‘현찰 살 때’ 환율보다 낮은 기준입니다.</p><p>KRW 송금 시에는 아보카드 전용 환율이 적용됩니다.</p><p>네이버 중국 환율의 <strong>‘송금 보낼 때’</strong> 기준에서 약 ±1 범위로 적용될 수 있습니다.</p>"
+          }
+        },
+        "faq_duration": {
+          "type": "question",
+          "settings": {
+            "question": "전체 진행 기간은 얼마나 소요되나요?",
+            "answer": "<p>결제 완료 후 <strong>영업일 기준 약 12일 내외</strong>가 소요됩니다.</p><p>사업자 수입대행은 <strong>영업일 기준 약 2주에서 2주 반</strong> 정도 소요될 수 있습니다.</p><p>중국 판매자의 발송 속도, 현지 물류 상황, 세관 검사 여부와 국내 배송 상황에 따라 일정은 단축되거나 지연될 수 있습니다.</p>"
+          }
+        },
+        "faq_rocket": {
+          "type": "question",
+          "settings": {
+            "question": "로켓그로스 센터로 바로 입고할 수 있나요?",
+            "answer": "<p><strong>네, 가능합니다.</strong></p><p>아보카드는 1688 상품 주문부터 중국 창고 입고와 검수까지 지원합니다.</p><p>바코드 부착, 합포장, 밀크런 준비, 박스 교체, 파렛트 작업, 부착문서와 동봉문서 작업도 진행할 수 있습니다.</p><p>한국 도착 후에는 아보카드 3PL 창고 보관, 밀크런 픽업 준비 또는 CJ대한통운 택배 직접 발송 등 고객님의 입고 방식에 맞춰 진행을 도와드립니다.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_personal",
+        "faq_rate",
+        "faq_duration",
+        "faq_rocket"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "수입대행, 자주 묻는 질문",
+        "primary_label": "전체 FAQ 보기",
+        "primary_link": "shopify://pages/자주하는-질문",
+        "secondary_label": "카카오톡 문의",
+        "secondary_link": "http://pf.kakao.com/_xjppQb/chat",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_certification": {
+      "type": "avocard-certification",
+      "blocks": {
+        "cert_1688": {
+          "type": "certificate",
+          "settings": {
+            "badge_icon": "check-circle",
+            "badge_label": "1688 공식 인증",
+            "title": "1688 슈퍼 바이어",
+            "subtitle": "Annual Elite Customer · 超级买家",
+            "description": "1688이 공식 선정한 슈퍼 바이어입니다.\n일반 계정은 받을 수 없는 최상위 등급으로,\n안전한 거래와 단가 혜택을 보장합니다.",
+            "number_label": ""
+          }
+        },
+        "cert_venture": {
+          "type": "certificate",
+          "settings": {
+            "badge_icon": "shield",
+            "badge_label": "정부 공인",
+            "title": "벤처확인기업",
+            "subtitle": "Venture Enterprise · 중판 주식회사",
+            "description": "벤처기업확인기관이 인증한 혁신 성장유형\n벤처확인기업입니다. 정부가 검증한 기업이\n직접 운영하는 서비스입니다.",
+            "number_label": "벤처확인번호 20260506030073"
+          }
+        }
+      },
+      "block_order": [
+        "cert_1688",
+        "cert_venture"
+      ],
+      "settings": {
+        "eyebrow": "공식 인증",
+        "heading_1": "공식 인증받은",
+        "heading_2": "믿을 수 있는 파트너",
+        "subtitle": "1688 공식 협력사이자 정부 인증 벤처기업, 아보카드 주식회사가 직접 운영합니다.",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "avocard_final": {
+      "type": "avocard-final-cta",
+      "blocks": {
+        "final_trust_1": {
+          "type": "trust_item",
+          "settings": {
+            "label": "무료 견적"
+          }
+        },
+        "final_trust_2": {
+          "type": "trust_item",
+          "settings": {
+            "label": "빠른 응답"
+          }
+        },
+        "final_trust_3": {
+          "type": "trust_item",
+          "settings": {
+            "label": "투명한 수수료"
+          }
+        },
+        "final_trust_4": {
+          "type": "trust_item",
+          "settings": {
+            "label": "증빙 자료 완비"
+          }
+        }
+      },
+      "block_order": [
+        "final_trust_1",
+        "final_trust_2",
+        "final_trust_3",
+        "final_trust_4"
+      ],
+      "settings": {
+        "badge": "지금 바로 시작하세요",
+        "heading": "써보는 게 제일 빠릅니다",
+        "description": "수입대행 견적, 지금 바로 무료로 받아보세요",
+        "guide_label": "견적 신청 방법",
+        "guide_link": "https://avocard.co.kr/pages/아보카드-이용가이드",
+        "quote_label": "수입대행 견적 신청하기",
+        "quote_link": "https://www.jungpan.com/front/avocard/index.asp",
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": [
+    "avocard_hero",
+    "avocard_images",
+    "avocard_why",
+    "avocard_fee",
+    "avocard_import",
+    "avocard_documents",
+    "avocard_faq",
+    "avocard_certification",
+    "avocard_final"
+  ]
+}

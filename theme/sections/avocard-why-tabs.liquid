@@ -1,0 +1,239 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="avocard-why" class="avocard avocard-band section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- render 'avocard-section-heading',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.text
+    -%}
+
+    <div class="avocard-benefits-grid">
+      {%- for block in section.blocks -%}
+        <article class="avocard-benefit-card avocard-benefit-card--{{ block.settings.tone }}" {{ block.shopify_attributes }}>
+          <span class="avocard-benefit-card__icon">
+            {%- render 'avocard-icon', name: block.settings.icon, size: 20 -%}
+          </span>
+          <h3>{{ block.settings.title | escape }}</h3>
+          <p>{{ block.settings.text | escape }}</p>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard why tabs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "왜 아보카드인가"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "셀러가 직접 할 필요 없는 일, 아보카드가 합니다"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>1688 수입부터 국내 입고까지, 번거로운 과정을 대신 처리해드립니다.</p>"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Color tone",
+          "options": [
+            {
+              "value": "blue",
+              "label": "Blue"
+            },
+            {
+              "value": "green",
+              "label": "Green"
+            },
+            {
+              "value": "purple",
+              "label": "Purple"
+            },
+            {
+              "value": "orange",
+              "label": "Orange"
+            },
+            {
+              "value": "red",
+              "label": "Red"
+            }
+          ],
+          "default": "green"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "credit-card",
+              "label": "Credit card"
+            },
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "file-text",
+              "label": "File text"
+            },
+            {
+              "value": "warehouse",
+              "label": "Warehouse"
+            },
+            {
+              "value": "bar-chart",
+              "label": "Bar chart"
+            },
+            {
+              "value": "globe",
+              "label": "Globe"
+            },
+            {
+              "value": "package",
+              "label": "Package"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            }
+          ],
+          "default": "globe"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "1688 직접 구매대행"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "1688 상품 링크만 보내주시면 담당자가 직접 주문부터 처리합니다."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard why tabs",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "green",
+            "icon": "file-text",
+            "title": "간편 견적",
+            "text": "1688 장바구니 PDF 파일로 초간단 견적 요청 가능"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "blue",
+            "icon": "credit-card",
+            "title": "TT송금 & 카드결제 모두 지원",
+            "text": "원하는 결제 방식으로 간편하게"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "purple",
+            "icon": "shield",
+            "title": "개인·사업자 통관 모두 진행",
+            "text": "상품과 주문 목적에 맞는 통관 방식으로 안내"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "orange",
+            "icon": "file-text",
+            "title": "수입 증빙 자료 완비",
+            "text": "인보이스, 송금전표, 수입신고필증, 수입세금계산서 모두 OK"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "red",
+            "icon": "warehouse",
+            "title": "국내 3PL 보관",
+            "text": "아보카드 3PL 창고에 보관 및 로켓그로스 입고 지원"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "tone": "green",
+            "icon": "truck",
+            "title": "로켓그로스 입고",
+            "text": "쿠팡 로켓그로스 입고 기준에 맞는 택배·파렛트·트럭 모두 지원"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,222 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-hero avocard-band section-{{ section.id }}-padding">
+  <div class="avocard-page avocard-hero__inner">
+    <div class="avocard-hero__copy">
+      <h1 class="avocard-heading">
+        <span class="avocard-hero__brand-1688">{{ section.settings.heading_line_1_brand | escape }}</span><span class="avocard-hero__brand-default">{{ section.settings.heading_line_1_rest | escape }}</span><br>
+        <span class="avocard-hero__brand-avocard">{{ section.settings.heading_line_2_brand | escape }}</span><span class="avocard-hero__brand-default">{{ section.settings.heading_line_2_rest | escape }}</span><br>
+        {{ section.settings.heading_line_3 | escape }}<br>
+        {{ section.settings.heading_line_4 | escape }}
+      </h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="avocard-subtext">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+
+      <div class="avocard-hero__benefits" aria-label="아보카드 핵심 혜택">
+        <div class="avocard-hero__fee">
+          <strong>{{ section.settings.metric_1_value | escape }}</strong>
+          <span>{{ section.settings.metric_1_label | escape }}</span>
+        </div>
+      </div>
+
+      {%- render 'avocard-cta-buttons',
+        primary_label: section.settings.primary_label,
+        primary_link: section.settings.primary_link,
+        primary_icon: 'arrow-right',
+        secondary_label: section.settings.secondary_label,
+        secondary_link: section.settings.secondary_link,
+        secondary_icon: 'phone',
+        secondary_style: 'kakao'
+      -%}
+    </div>
+
+    <div class="avocard-hero__visual">
+      {%- if section.settings.image != blank -%}
+        <img
+          srcset="{%- if section.settings.image.width >= 550 -%}{{ section.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if section.settings.image.width >= 900 -%}{{ section.settings.image | image_url: width: 900 }} 900w,{%- endif -%}
+            {%- if section.settings.image.width >= 1300 -%}{{ section.settings.image | image_url: width: 1300 }} 1300w,{%- endif -%}
+            {{ section.settings.image | image_url }} {{ section.settings.image.width }}w"
+          src="{{ section.settings.image | image_url: width: 900 }}"
+          sizes="(min-width: 990px) 46vw, 100vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="eager"
+        >
+      {%- else -%}
+        <div class="avocard-ops-panel" aria-label="Avocard import workflow">
+          <div class="avocard-ops-panel__header">
+            <img
+              class="avocard-ops-panel__brand"
+              src="{{ 'avocard-logo-horizontal.png' | asset_url }}"
+              alt="Avocard"
+              width="100"
+              height="24"
+              loading="eager"
+            >
+            <span class="avocard-ops-panel__route">아보카드 서비스 범위</span>
+          </div>
+          <ol class="avocard-ops-list">
+            <li>
+              <span>{%- render 'avocard-icon', name: 'globe', size: 18 -%}</span>
+              <div><strong>1688 구매대행</strong><small>원하는 금액으로 중국 판매자 주문</small></div>
+            </li>
+            <li>
+              <span>{%- render 'avocard-icon', name: 'warehouse', size: 18 -%}</span>
+              <div><strong>중국 창고 입고 &amp; 검수</strong><small>합포장, 원산지표기, 바코드 부착 등 모든 작업 가능</small></div>
+            </li>
+            <li>
+              <span>{%- render 'avocard-icon', name: 'truck', size: 18 -%}</span>
+              <div><strong>국제배송 &amp; 통관</strong><small>개인통관 / 사업자통관 모두 지원</small></div>
+            </li>
+            <li>
+              <span>{%- render 'avocard-icon', name: 'package', size: 18 -%}</span>
+              <div><strong>국내 3PL &amp; 발송</strong><small>밀크런 픽업, CJ대한통운 직접 발송</small></div>
+            </li>
+            <li>
+              <span>{%- render 'avocard-icon', name: 'file-text', size: 18 -%}</span>
+              <div><strong>수입 증빙 자료</strong><small>정상적인 매입증빙에 필요한 필수자료 제공</small></div>
+            </li>
+          </ol>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_line_1_brand",
+      "label": "Heading line 1 (brand color)",
+      "default": "1688"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1_rest",
+      "label": "Heading line 1 (remaining text)",
+      "default": "에서 담고,"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2_brand",
+      "label": "Heading line 2 (brand color)",
+      "default": "아보카드"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2_rest",
+      "label": "Heading line 2 (remaining text)",
+      "default": "에 맡기면"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_3",
+      "label": "Heading line 3",
+      "default": "국내 배송부터"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_4",
+      "label": "Heading line 4",
+      "default": "로켓그로스 입고까지"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "1688 주문부터 검수·포장·통관·3PL 보관·로켓그로스 입고까지, 한 번에."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "수입대행 견적 신청하기"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "카카오톡 문의하기"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "text",
+      "id": "metric_1_value",
+      "label": "Metric value",
+      "default": "6%"
+    },
+    {
+      "type": "text",
+      "id": "metric_1_label",
+      "label": "Metric label",
+      "default": "구매대행 수수료"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard hero"
+    }
+  ]
+}
+{% endschema %}

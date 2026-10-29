@@ -1,0 +1,166 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.82 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.82 | round: 0 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="avocard avocard-band avocard-band--soft section-{{ section.id }}-padding">
+  <div class="avocard-page">
+    {%- render 'avocard-section-heading',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.text
+    -%}
+
+    <div class="avocard-grid avocard-grid--4">
+      {%- for block in section.blocks -%}
+        <a
+          class="avocard-card avocard-link-card"
+          {% if block.settings.link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ block.settings.link }}"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <h3>{{ block.settings.title | escape }}</h3>
+          <p>{{ block.settings.text | escape }}</p>
+          <span class="avocard-link-card__label">{{ block.settings.label | escape }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avocard cost links",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "비용 안내"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "필요한 비용 정보를 바로 확인하세요"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>수입대행, 국제배송, 로켓그로스 입고, 3PL 보관 등 주요 비용을 확인할 수 있습니다.</p>"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "국제 배송비"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "중국에서 한국까지의 국제배송 비용을 확인합니다."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Link label",
+          "default": "자세히 보기"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avocard cost links",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "title": "국제 배송비",
+            "text": "중국에서 한국까지의 국제배송 비용을 확인합니다.",
+            "label": "배송비 확인"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "title": "로켓그로스 입고 비용",
+            "text": "바코드, 문서, 박스, 파렛트 작업 비용을 확인합니다.",
+            "label": "입고 비용 보기"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "title": "3PL 보관 비용",
+            "text": "국내 Avocard 3PL 창고 보관과 발송 비용을 확인합니다.",
+            "label": "3PL 비용 보기"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "title": "FAQ",
+            "text": "이용 전 자주 묻는 질문과 답변을 확인합니다.",
+            "label": "FAQ 보기"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

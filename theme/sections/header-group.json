@@ -1,0 +1,99 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "avocard_top_categories": {
+      "type": "avocard-top-categories",
+      "blocks": {
+        "top_about_guide": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "이용가이드",
+            "link": "shopify://pages/아보카드-이용가이드"
+          }
+        },
+        "top_about_terms": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "운영약관",
+            "link": "https://avocard.co.kr/pages/이용약관"
+          }
+        },
+        "top_about_payment": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "결제 방식 소개",
+            "link": "https://avocard.co.kr/pages/아보카드-결제방식"
+          }
+        },
+        "top_about_shipping": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "배송요금표",
+            "link": "https://www.jungpan.com/Front/Introduction/DlvrMny.asp"
+          }
+        },
+        "top_about_rocket_cost": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "로켓그로스 예상비용",
+            "link": "https://avocard.co.kr/pages/로켓그로스-입고-시-예상-비용"
+          }
+        },
+        "top_about_custom_logo": {
+          "type": "link",
+          "settings": {
+            "group": "about",
+            "label": "맞춤 로고 제작",
+            "link": "https://customavocard.netlify.app/"
+          }
+        },
+        "top_order_apply": {
+          "type": "link",
+          "settings": {
+            "group": "order",
+            "label": "수입대행 신청 / 조회",
+            "link": "https://www.jungpan.com/front/avocard/index.asp"
+          }
+        },
+        "top_support_faq": {
+          "type": "link",
+          "settings": {
+            "group": "support",
+            "label": "FAQ",
+            "link": "shopify://pages/자주하는-질문"
+          }
+        }
+      },
+      "block_order": [
+        "top_about_guide",
+        "top_about_terms",
+        "top_about_payment",
+        "top_about_shipping",
+        "top_about_rocket_cost",
+        "top_about_custom_logo",
+        "top_order_apply",
+        "top_support_faq"
+      ],
+      "settings": {
+        "logo_text": "Avocard",
+        "about_label": "ABOUT 아보카드",
+        "order_label": "수입대행 신청 / 조회",
+        "support_label": "고객센터",
+        "support_cta_label": "로그인/회원가입",
+        "support_cta_link": "https://avocard.co.kr/account/login",
+        "cta_label": "수입대행 신청",
+        "cta_link": "https://www.jungpan.com/front/avocard/index.asp",
+        "sticky_on_scroll": false
+      }
+    }
+  },
+  "order": [
+    "avocard_top_categories"
+  ]
+}
